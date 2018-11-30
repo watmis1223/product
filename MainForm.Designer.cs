@@ -35,8 +35,10 @@
             this.brBtnPriceCalculation = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnPriceSetting = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnOil = new DevExpress.XtraBars.BarButtonItem();
+            this.brBtnCopy = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.pnlMain = new DevExpress.XtraEditors.PanelControl();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
@@ -51,9 +53,10 @@
             this.brBrnPrice,
             this.brBtnOil,
             this.brBtnPriceCalculation,
-            this.brBtnPriceSetting});
+            this.brBtnPriceSetting,
+            this.brBtnCopy});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 10;
+            this.ribbonControl1.MaxItemId = 11;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -103,10 +106,21 @@
             this.brBtnOil.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             this.brBtnOil.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnOil_ItemClick);
             // 
+            // brBtnCopy
+            // 
+            this.brBtnCopy.Caption = "Copy";
+            this.brBtnCopy.Id = 10;
+            this.brBtnCopy.ImageOptions.Image = global::ProductCalculation.Properties.Resources.copy_16x16;
+            this.brBtnCopy.ImageOptions.LargeImage = global::ProductCalculation.Properties.Resources.copy_32x32;
+            this.brBtnCopy.Name = "brBtnCopy";
+            this.brBtnCopy.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.brBtnCopy.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnCopy_ItemClick);
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup1});
+            this.ribbonPageGroup1,
+            this.ribbonPageGroup2});
             this.ribbonPage1.Name = "ribbonPage1";
             this.ribbonPage1.Text = "Module";
             // 
@@ -114,6 +128,11 @@
             // 
             this.ribbonPageGroup1.ItemLinks.Add(this.brBrnPrice);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
+            // 
+            // ribbonPageGroup2
+            // 
+            this.ribbonPageGroup2.ItemLinks.Add(this.brBtnCopy);
+            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
             // 
             // pnlMain
             // 
@@ -158,5 +177,7 @@
         private DevExpress.XtraBars.BarButtonItem brBtnPriceCalculation;
         private DevExpress.XtraBars.BarButtonItem brBtnPriceSetting;
         private DevExpress.XtraEditors.PanelControl pnlMain;
+        private DevExpress.XtraBars.BarButtonItem brBtnCopy;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
     }
 }

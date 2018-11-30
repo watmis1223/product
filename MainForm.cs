@@ -15,7 +15,7 @@ using ProductCalculation.Library.Global;
 namespace ProductCalculation
 {
     public partial class MainForm : DevExpress.XtraBars.Ribbon.RibbonForm
-    {        
+    {
         PriceCtrlMain _PriceModule = new PriceCtrlMain();
         string[] _Args;
 
@@ -27,7 +27,9 @@ namespace ProductCalculation
         }
 
         private void MainForm_Load(object sender, EventArgs e)
-        {            
+        {
+            ribbonPageGroup2.Visible = true;
+
             _PriceModule.Dock = DockStyle.Fill;
 
             bool isProffixLoad = false;
@@ -43,7 +45,11 @@ namespace ProductCalculation
             if (!isProffixLoad)
             {
                 brBtnPriceCalculation_ItemClick(this, null);
-            }            
+            }
+            else
+            {
+                ribbonPageGroup2.Visible = true;
+            }
         }
 
         public void ShowModule(ApplicationModules module, params string[] arguments)
@@ -64,6 +70,10 @@ namespace ProductCalculation
                     pnlMain.Controls.Add(_PriceModule);
                     _PriceModule.ModuleCalculationByProffixMode(arguments);
                     break;
+                case ApplicationModules.PriceModuleCopyCalculation:
+                    pnlMain.Controls.Add(_PriceModule);
+                    _PriceModule.ModuleCopyCalculationMode();
+                    break;
 
             }
         }
@@ -75,7 +85,7 @@ namespace ProductCalculation
 
         private void brBtnOil_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            
+
         }
 
         private void brBtnPriceCalculation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -86,6 +96,11 @@ namespace ProductCalculation
         private void brBtnPriceSetting_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ShowModule(ApplicationModules.PriceModuleSetting);
+        }
+
+        private void brBtnCopy_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            ShowModule(ApplicationModules.PriceModuleCopyCalculation);
         }
     }
 }

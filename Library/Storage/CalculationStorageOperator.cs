@@ -104,7 +104,7 @@ namespace ProductCalculation.Library.Storage
             if (model.ID == 0)
             {
                 //model.ID = CalPriceGetLatestID() + 1;
-                dr["CreatedDate"] = DateTime.Now;
+                dr["CreatedDate"] = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
                 oIgnoreSave.Add(dt.Columns["ModifiedDate"]);
 
                 //insert new row first to get id
@@ -112,7 +112,7 @@ namespace ProductCalculation.Library.Storage
             }
             else
             {
-                dr["ModifiedDate"] = DateTime.Now;
+                dr["ModifiedDate"] = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
                 oIgnoreSave.Add(dt.Columns["CreatedDate"]);
             }
 

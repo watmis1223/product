@@ -92,7 +92,7 @@ namespace ProductCalculation.Library.Storage
                 valueCols.AddRange(dt.Columns.Cast<DataColumn>().ToList());
 
                 //insert new
-                DateTime oNow = DateTime.Now;
+                DateTime oNow = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US")), "yyyy-MM-dd", new CultureInfo("en-US"));
                 foreach (CalculationNoteModel note in model.CalculationNotes)
                 {
                     if (note.ID == 0)

@@ -18,8 +18,11 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 {
     public partial class PriceCtrlMain : DevExpress.XtraEditors.XtraUserControl
     {
-        public delegate void SettingSaveChangedCallback();
-        public event SettingSaveChangedCallback SettingSaveChanged;
+        //public delegate void SettingSaveChangedCallback();
+        //public event SettingSaveChangedCallback SettingSaveChanged;
+
+        public delegate void CloseCopyModuleCallback();
+        public event CloseCopyModuleCallback CloseCopyModule;
 
         PriceCalculationSetting _PriceCalculationSetting;
 
@@ -49,6 +52,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             settingTabPage.PageVisible = true;
             generalTabPage.PageVisible = false;
             calculationTabPage.PageVisible = false;
+            copyCalculationTabPage.PageVisible = false;
             mainTabControl.SelectedTabPage = settingTabPage;
         }
 
@@ -57,7 +61,20 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             settingTabPage.PageVisible = false;
             generalTabPage.PageVisible = true;
             calculationTabPage.PageVisible = isCalculationTabVisible;
+            copyCalculationTabPage.PageVisible = false;
             mainTabControl.SelectedTabPage = generalTabPage;
+        }
+
+        public void ModuleCopyCalculationMode()
+        {
+            mainTabControl.ClosePageButtonShowMode = DevExpress.XtraTab.ClosePageButtonShowMode.InActiveTabPageHeader;
+
+            settingTabPage.PageVisible = false;
+            //generalTabPage.PageVisible = false;
+            //calculationTabPage.PageVisible = false;
+            copyCalculationTabPage.PageVisible = true;
+            copyCalculationTabPage.ShowCloseButton = DevExpress.Utils.DefaultBoolean.True;
+            mainTabControl.SelectedTabPage = copyCalculationTabPage;
         }
 
         void AddCalculationListItem(CalculationModel model)
@@ -93,7 +110,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             if (oProffix.IsLoad)
             {
                 //load cal setting from db
-                CalculationModel oCal = StorageOperator.CalPriceLoadByID(Convert.ToInt64(oProffix.CalculationID));                
+                CalculationModel oCal = StorageOperator.CalPriceLoadByID(Convert.ToInt64(oProffix.CalculationID));
                 calculationTabPage.PageVisible = true;
 
                 generalCtrl1.LoadCalculation(oCal);
@@ -120,12 +137,33 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 
             //reload calculation control           
             calculationBasicCtrl1.NewCalculation(generalCtrl1.GetModel(), _PriceCalculationSetting);
-            AddCalculationListItem(calculationBasicCtrl1.GetModel());            
+            AddCalculationListItem(calculationBasicCtrl1.GetModel());
         }
 
         private void MainTabControl_SelectedPageChanged(object sender, DevExpress.XtraTab.TabPageChangedEventArgs e)
         {
-            
+            generalTabPage.PageEnabled = true;
+            calculationTabPage.PageEnabled = true;
+            settingTabPage.PageEnabled = true;
+            copyCalculationTabPage.PageEnabled = true;
+
+            if (e.Page.Name == copyCalculationTabPage.Name)
+            {
+                settingTabPage.PageEnabled = false;
+                generalTabPage.PageEnabled = false;
+                calculationTabPage.PageEnabled = false;
+                copyCalculationTabPage.PageEnabled = true;
+            }
+        }
+
+        private void mainTabControl_CloseButtonClick(object sender, EventArgs e)
+        {
+            settingTabPage.PageVisible = settingTabPage.PageVisible;
+            generalTabPage.PageVisible = generalTabPage.PageVisible;
+            calculationTabPage.PageVisible = calculationTabPage.PageVisible;
+            copyCalculationTabPage.PageVisible = false;
+
+            mainTabControl.ClosePageButtonShowMode = DevExpress.XtraTab.ClosePageButtonShowMode.Default;
         }
     }
 }

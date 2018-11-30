@@ -117,6 +117,13 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
         }
     }
 
+    public class CopyCalculationModel
+    {
+        public string AddressNo { get; set; } 
+        public string ProductNo { get; set; }
+        public int Scale { get; set; }
+    }
+
     public class ComboboxItemModel
     {
         public long Value { get; set; }

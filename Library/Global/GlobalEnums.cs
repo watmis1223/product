@@ -10,6 +10,7 @@ namespace ProductCalculation.Library.Global
     {
         PriceModuleCalculation,
         PriceModuleSetting,
-        PriceModuleCalculationByProffix
+        PriceModuleCalculationByProffix,
+        PriceModuleCopyCalculation
     }
 }

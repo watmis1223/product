@@ -37,6 +37,7 @@
             this.settingCtrl1 = new ProductCalculation.Library.UI.PriceCalculation.SettingCtrl();
             this.calculationTabPage = new DevExpress.XtraTab.XtraTabPage();
             this.calculationBasicCtrl1 = new ProductCalculation.Library.UI.PriceCalculation.CalculationBasicCtrl();
+            this.copyCalculationTabPage = new DevExpress.XtraTab.XtraTabPage();
             this.bar3 = new DevExpress.XtraBars.Bar();
             this.bar2 = new DevExpress.XtraBars.Bar();
             this.bar1 = new DevExpress.XtraBars.Bar();
@@ -61,8 +62,9 @@
             this.mainTabControl.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
             this.settingTabPage,
             this.generalTabPage,
-            this.calculationTabPage});
-            this.mainTabControl.SelectedPageChanged += MainTabControl_SelectedPageChanged;
+            this.calculationTabPage,
+            this.copyCalculationTabPage});
+            this.mainTabControl.CloseButtonClick += new System.EventHandler(this.mainTabControl_CloseButtonClick);            
             // 
             // generalTabPage
             // 
@@ -141,6 +143,12 @@
             this.calculationBasicCtrl1.Size = new System.Drawing.Size(1520, 1087);
             this.calculationBasicCtrl1.TabIndex = 0;
             // 
+            // copyCalculationTabPage
+            // 
+            this.copyCalculationTabPage.Name = "copyCalculationTabPage";
+            this.copyCalculationTabPage.Size = new System.Drawing.Size(1520, 1087);
+            this.copyCalculationTabPage.Text = "CopyTo";            
+            // 
             // bar3
             // 
             this.bar3.BarName = "Status bar";
@@ -197,5 +205,6 @@
         private DevExpress.XtraBars.Bar bar1;
         private DevExpress.XtraEditors.SplitContainerControl splitContainerControl1;
         private DevExpress.XtraEditors.ListBoxControl lstCalculation;
+        private DevExpress.XtraTab.XtraTabPage copyCalculationTabPage;
     }
 }
