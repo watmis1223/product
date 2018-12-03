@@ -21,14 +21,16 @@ namespace ProductCalculation.Library.UI.PriceCalculation
         //public delegate void SettingSaveChangedCallback();
         //public event SettingSaveChangedCallback SettingSaveChanged;
 
-        public delegate void CloseCopyModuleCallback();
-        public event CloseCopyModuleCallback CloseCopyModule;
+        public delegate void CopyCallback(string copyCommand);
+        public event CopyCallback Copy;
 
         PriceCalculationSetting _PriceCalculationSetting;
 
         List<ComboboxItemModel> _CalculationList = new List<ComboboxItemModel>();
 
         bool isCalculationTabVisible = false;
+
+        string[] _Aarguments;
 
         public PriceCtrlMain()
         {
@@ -45,6 +47,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             generalCtrl1.SetTextLine(_PriceCalculationSetting.TextSetting);
 
             lstCalculation.DataSource = _CalculationList;
+            copyCalculationTabPage.PageVisible = false;
         }
 
         public void ModuleSettingMode()
@@ -75,6 +78,11 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             copyCalculationTabPage.PageVisible = true;
             copyCalculationTabPage.ShowCloseButton = DevExpress.Utils.DefaultBoolean.True;
             mainTabControl.SelectedTabPage = copyCalculationTabPage;
+
+            //if (calculationBasicCtrl1 != null)
+            //{
+            //    calculationCopyCtrl1.SetCalculationModel(calculationBasicCtrl1.GetModel());                
+            //}
         }
 
         void AddCalculationListItem(CalculationModel model)
@@ -97,26 +105,45 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 
         public void ModuleCalculationByProffixMode(string[] arguments)
         {
+            _Aarguments = arguments;
+
             settingTabPage.PageVisible = false;
             generalTabPage.PageVisible = true;
             calculationTabPage.PageVisible = false;
             mainTabControl.SelectedTabPage = generalTabPage;
 
+            if (_PriceCalculationSetting == null)
+            {
+                ReloadPriceCalculationSetting(true);
+            }
+
             //if call from proffix, arguments should not null
             ProffixModel oProffix = new ProffixModel();
-            oProffix.SetModel(arguments);
+            oProffix.SetModel(arguments);           
+
+            //set general info
             generalCtrl1.SetProffixParam(oProffix, _PriceCalculationSetting.ProffixConnection);
 
-            if (oProffix.IsLoad)
+            //load or copy
+            if (oProffix.Command == Global.Commands.Open || oProffix.Command == Global.Commands.Copy)
             {
                 //load cal setting from db
                 CalculationModel oCal = StorageOperator.CalPriceLoadByID(Convert.ToInt64(oProffix.CalculationID));
-                calculationTabPage.PageVisible = true;
+                if (oCal != null)
+                {
+                    oCal.ProffixModel = oProffix;
 
-                generalCtrl1.LoadCalculation(oCal);
+                    if (oProffix.Command == Global.Commands.Copy)
+                    {
+                        oCal.ID = 0;
+                    }
 
-                ReloadPriceCalculationSetting(true);
-                calculationBasicCtrl1.LoadCalculation(oCal, _PriceCalculationSetting);
+                    calculationTabPage.PageVisible = true;
+
+                    generalCtrl1.LoadCalculation(oCal);
+
+                    calculationBasicCtrl1.LoadCalculation(oCal, _PriceCalculationSetting);
+                }
             }
         }
 
@@ -164,6 +191,39 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             copyCalculationTabPage.PageVisible = false;
 
             mainTabControl.ClosePageButtonShowMode = DevExpress.XtraTab.ClosePageButtonShowMode.Default;
+        }
+
+        private void calculationCopyCtrl1_SaveChanged()
+        {
+            _Aarguments = null;
+
+            string copyCommand = String.Empty;
+
+            //generate copy command
+            CopyCalculationModel oCopyModel = calculationCopyCtrl1.GetModel();
+            CalculationModel oCalcultionModel = calculationBasicCtrl1.GetModel();
+
+            if (oCopyModel != null && oCalcultionModel != null)
+            {
+                if (!String.IsNullOrWhiteSpace(oCopyModel.AddressNo))
+                {
+                    copyCommand = String.Concat(copyCommand, "copya ", oCopyModel.AddressNo, " ", oCalcultionModel.ID, " ", oCopyModel.Scale);
+                }
+                else if (!String.IsNullOrWhiteSpace(oCopyModel.ProductNo))
+                {
+                    copyCommand = String.Concat(copyCommand, "copy ", oCopyModel.ProductNo, " ", oCalcultionModel.ID, " ", oCopyModel.Scale);
+                }
+            }
+
+            if (Copy != null)
+            {
+                Copy(copyCommand);
+            }
+        }
+
+        private void calculationBasicCtrl1_SaveChanged()
+        {
+            _Aarguments = null;
         }
     }
 }

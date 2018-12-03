@@ -11,6 +11,7 @@ using ProductCalculation.Library.Storage;
 using ProductCalculation.Library.UI;
 using ProductCalculation.Library.UI.PriceCalculation;
 using ProductCalculation.Library.Global;
+using System.Diagnostics;
 
 namespace ProductCalculation
 {
@@ -24,32 +25,16 @@ namespace ProductCalculation
             InitializeComponent();
 
             _Args = arguments;
+            _PriceModule.Copy += _PriceModule_Copy;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            ribbonPageGroup2.Visible = true;
+            ribbonPageGroup2.Visible = false;
 
             _PriceModule.Dock = DockStyle.Fill;
 
-            bool isProffixLoad = false;
-            if (_Args != null && _Args.Length > 0)
-            {
-                if (_Args[0].StartsWith("open"))
-                {
-                    isProffixLoad = true;
-                    CallByProffix(new string[] { "", _Args[0] });
-                }
-            }
-
-            if (!isProffixLoad)
-            {
-                brBtnPriceCalculation_ItemClick(this, null);
-            }
-            else
-            {
-                ribbonPageGroup2.Visible = true;
-            }
+            CallByProffix(_Args);            
         }
 
         public void ShowModule(ApplicationModules module, params string[] arguments)
@@ -77,10 +62,37 @@ namespace ProductCalculation
 
             }
         }
-
         public void CallByProffix(string[] arguments)
         {
-            ShowModule(ApplicationModules.PriceModuleCalculationByProffix, arguments);
+            ribbonPageGroup2.Visible = false;
+
+            _Args = arguments;
+
+            bool isProffixLoad = false;
+            if (_Args != null && _Args.Length >= 2)
+            {
+                if (_Args[1].StartsWith("open"))
+                {
+                    isProffixLoad = true;
+
+                    if (_Args[1].Split(new string[] { " "}, StringSplitOptions.RemoveEmptyEntries).Length > 2)
+                    {                        
+                        ribbonPageGroup2.Visible = true;
+                    }                    
+                }
+                else if (_Args[1].StartsWith("copy"))
+                {
+                    isProffixLoad = true;
+                    ribbonPageGroup2.Visible = false;
+                }
+
+                ShowModule(ApplicationModules.PriceModuleCalculationByProffix, new string[] { _Args[0], _Args[1] });
+            }
+
+            if (!isProffixLoad)
+            {
+                brBtnPriceCalculation_ItemClick(this, null);
+            }           
         }
 
         private void brBtnOil_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -90,7 +102,8 @@ namespace ProductCalculation
 
         private void brBtnPriceCalculation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            ShowModule(ApplicationModules.PriceModuleCalculation);
+            //ShowModule(ApplicationModules.PriceModuleCalculation);
+            ShowModule(ApplicationModules.PriceModuleCalculationByProffix, new string[] { _Args[0], _Args[1] });
         }
 
         private void brBtnPriceSetting_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -101,6 +114,17 @@ namespace ProductCalculation
         private void brBtnCopy_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ShowModule(ApplicationModules.PriceModuleCopyCalculation);
+        }
+
+        private void _PriceModule_Copy(string copyCommand)
+        {
+            if (!String.IsNullOrWhiteSpace(copyCommand) && _Args != null)
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = _Args[0];
+                startInfo.Arguments = copyCommand;
+                Process.Start(startInfo);
+            }
         }
     }
 }

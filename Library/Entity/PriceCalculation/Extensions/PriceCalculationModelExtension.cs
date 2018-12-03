@@ -254,6 +254,185 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Extensions
             });
         }
 
+        public static void ExtendScaleCalculationNote(this CalculationModel model, PriceSetting priceSetting, int extendCount)
+        {
+            if (model == null)
+            {
+                return;
+            }
+
+            //price scale id start by 1
+            int starItemtOrderID = model.CalculationNotes.First().CalculationItems.Last().ItemOrder;
+            long lastID = model.CalculationNotes.Last().ID;
+            int count = extendCount;
+
+            while (count > 0)
+            {
+                int iOrder = starItemtOrderID;
+
+                CalculationNoteModel oItem = new CalculationNoteModel()
+                {
+                    ID = lastID + 1,
+                    CalculationItems = new List<CalculationItemModel>(),
+                    //CalculationMarginItems = new List<CalculationItemModel>()
+                };
+                model.CalculationNotes.Add(oItem);
+
+                //group4   
+                iOrder += 1;
+                oItem.CalculationItems.Add(new CalculationItemModel()
+                {
+                    Sign = "+",
+                    Description = "Gewinnaufschlag",
+                    Tag = "GA",
+                    Currency = new CurrencyModel() { Currency = "CHF" },
+                    BaseCalculationGroupRows = new List<int>() { 0, 1, 2, 3 },
+                    Group = 4,
+                    ItemOrder = iOrder,
+                    Convert = model.GeneralSetting.Convert.Mode == "E" ? new ConvertModel() { Unit = "EE" } : null
+                });
+
+                iOrder += 1;
+                oItem.CalculationItems.Add(new CalculationItemModel()
+                {
+                    Sign = "=",
+                    Description = "Barverkaufspreis",
+                    Tag = "VK(bar)",
+                    Currency = new CurrencyModel() { Currency = "CHF" },
+                    Group = 4,
+                    IsSummary = true,
+                    SummaryGroups = new List<int>() { 0, 1, 2, 3, 4 },
+                    CostCalculatonGroup = new CostCalculatonGroupModel()
+                    {
+                        BaseCalculationGroupRows = new List<int>() { 5 },
+                        SummaryGroups = new List<int> { 5 },
+                    },
+                    ItemOrder = iOrder,
+                    Convert = model.GeneralSetting.Convert.Mode == "E" ? new ConvertModel() { Unit = "EE" } : null
+                });
+
+
+                //group5
+                iOrder += 1;
+                oItem.CalculationItems.Add(new CalculationItemModel()
+                {
+                    Sign = "+",
+                    Description = "Kundenskonto",
+                    AmountPercent = priceSetting.CashDiscount,
+                    Tag = "SKT",
+                    Currency = new CurrencyModel() { Currency = "CHF" },
+                    BaseCalculationGroupRows = new List<int>() { 0, 1, 2, 3, 4 },
+                    Group = 5,
+                    ItemOrder = iOrder,
+                    Convert = model.GeneralSetting.Convert.Mode == "E" ? new ConvertModel() { Unit = "EE" } : null,
+                    EditedField = "P"
+                });
+
+                iOrder += 1;
+                oItem.CalculationItems.Add(new CalculationItemModel()
+                {
+                    Sign = "+",
+                    Description = "Verhandlungsspielraum",
+                    AmountPercent = priceSetting.SalesBonus,
+                    Tag = "PV",
+                    Currency = new CurrencyModel() { Currency = "CHF" },
+                    BaseCalculationGroupRows = new List<int>() { 0, 1, 2, 3, 4 },
+                    Group = 5,
+                    ItemOrder = iOrder,
+                    Convert = model.GeneralSetting.Convert.Mode == "E" ? new ConvertModel() { Unit = "EE" } : null,
+                    EditedField = "P"
+                });
+
+                iOrder += 1;
+                oItem.CalculationItems.Add(new CalculationItemModel()
+                {
+                    Sign = "=",
+                    Description = "Zielverkaufspreis",
+                    Tag = "VK(ziel)",
+                    Currency = new CurrencyModel() { Currency = "CHF" },
+                    Group = 5,
+                    IsSummary = true,
+                    SummaryGroups = new List<int>() { 0, 1, 2, 3, 4, 5 },
+                    CostCalculatonGroup = new CostCalculatonGroupModel()
+                    {
+                        BaseCalculationGroupRows = new List<int>() { 6 },
+                        SummaryGroups = new List<int> { 6 },
+                    },
+                    ItemOrder = iOrder,
+                    Convert = model.GeneralSetting.Convert.Mode == "E" ? new ConvertModel() { Unit = "EE" } : null
+                });
+
+
+                //group6
+                iOrder += 1;
+                oItem.CalculationItems.Add(new CalculationItemModel()
+                {
+                    Sign = "+",
+                    Description = "Kundenrabatt",
+                    AmountPercent = priceSetting.CustomerDiscount,
+                    Tag = "RBT",
+                    Currency = new CurrencyModel() { Currency = "CHF" },
+                    BaseCalculationGroupRows = new List<int>() { 0, 1, 2, 3, 4, 5 },
+                    Group = 6,
+                    ItemOrder = iOrder,
+                    Convert = model.GeneralSetting.Convert.Mode == "E" ? new ConvertModel() { Unit = "EE" } : null,
+                    EditedField = "P"
+                });
+
+                iOrder += 1;
+                oItem.CalculationItems.Add(new CalculationItemModel()
+                {
+                    Sign = "=",
+                    Description = "Nettoverkaufspreis",
+                    Tag = "VK(liste)",
+                    Currency = new CurrencyModel() { Currency = "CHF" },
+                    Group = 6,
+                    IsSummary = true,
+                    SummaryGroups = new List<int>() { 0, 1, 2, 3, 4, 5, 6 },
+                    CostCalculatonGroup = new CostCalculatonGroupModel()
+                    {
+                        BaseCalculationGroupRows = new List<int>() { 7 },
+                        SummaryGroups = new List<int> { 7 },
+                    },
+                    ItemOrder = iOrder,
+                    Convert = model.GeneralSetting.Convert.Mode == "E" ? new ConvertModel() { Unit = "EE" } : null
+                });
+
+
+                //group7
+                iOrder += 1;
+                oItem.CalculationItems.Add(new CalculationItemModel()
+                {
+                    Sign = "+",
+                    Description = "Mehrwertsteuer",
+                    AmountPercent = priceSetting.VatTaxes,
+                    Tag = "MWST",
+                    Currency = new CurrencyModel() { Currency = "CHF" },
+                    BaseCalculationGroupRows = new List<int>() { 0, 1, 2, 3, 4, 5, 6 },
+                    Group = 7,
+                    ItemOrder = iOrder,
+                    Convert = model.GeneralSetting.Convert.Mode == "E" ? new ConvertModel() { Unit = "EE" } : null,
+                    EditedField = "P"
+                });
+
+                iOrder += 1;
+                oItem.CalculationItems.Add(new CalculationItemModel()
+                {
+                    Sign = "=",
+                    Description = "Bruttoverkaufspreis",
+                    Tag = "VK(brutto)",
+                    Currency = new CurrencyModel() { Currency = "CHF" },
+                    Group = 7,
+                    IsSummary = true,
+                    SummaryGroups = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7 },
+                    ItemOrder = iOrder,
+                    Convert = model.GeneralSetting.Convert.Mode == "E" ? new ConvertModel() { Unit = "EE" } : null
+                });
+
+                count = count - 1;
+            }
+        }
+
         public static void SetScaleCalculationNote(this CalculationModel model, PriceSetting priceSetting, int starItemtOrderID)
         {
             //price scale id start by 1

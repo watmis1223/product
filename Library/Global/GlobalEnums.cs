@@ -13,4 +13,11 @@ namespace ProductCalculation.Library.Global
         PriceModuleCalculationByProffix,
         PriceModuleCopyCalculation
     }
+
+    public enum Commands
+    {        
+        New,
+        Open,
+        Copy
+    }
 }

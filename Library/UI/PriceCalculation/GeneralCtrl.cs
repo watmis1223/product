@@ -96,53 +96,91 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             _ProffixModel = model;
 
             //load proffix product
-            ProffixLAGArtikelModel oLAGArtikel =
-                StorageOperator.GetProffixLAGArtikelModel(model.LAGDokumenteArtikelNrLAG, connectionString);
-            if (oLAGArtikel != null)
+            if (!String.IsNullOrWhiteSpace(model.LAGDokumenteArtikelNrLAG))
             {
-                string[] oLines = new string[6];
-                oLines[0] = !String.IsNullOrWhiteSpace(oLAGArtikel.ArtikelNrLAG) ? oLAGArtikel.ArtikelNrLAG : "-";
-                oLines[1] = !String.IsNullOrWhiteSpace(oLAGArtikel.Bezeichnung1) ? oLAGArtikel.Bezeichnung1 : "-";
-                oLines[2] = !String.IsNullOrWhiteSpace(oLAGArtikel.Bezeichnung2) ? oLAGArtikel.Bezeichnung2 : "-";
-                oLines[3] = !String.IsNullOrWhiteSpace(oLAGArtikel.Bezeichnung3) ? oLAGArtikel.Bezeichnung3 : "-";
-                oLines[4] = !String.IsNullOrWhiteSpace(oLAGArtikel.Bezeichnung4) ? oLAGArtikel.Bezeichnung4 : "-";
-                oLines[5] = !String.IsNullOrWhiteSpace(oLAGArtikel.Bezeichnung5) ? oLAGArtikel.Bezeichnung5 : "-";
-                txtProductDesc.Lines = oLines;
-            }
-
-
-            //load proffix supplier
-            List<ProffixLAGLieferantenModel> oLAGLieferantenList =
-                StorageOperator.GetProffixLAGLieferantenModelList(model.LAGDokumenteArtikelNrLAG, connectionString);
-            if (oLAGLieferantenList != null)
-            {
-                ddSupplier.Properties.Items.Clear();
-                //ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = "-", Value = 0 });
-                foreach (ProffixLAGLieferantenModel item in oLAGLieferantenList)
+                //product
+                ProffixLAGArtikelModel oLAGArtikel = StorageOperator.GetProffixLAGArtikelModel(
+                    model.LAGDokumenteArtikelNrLAG, connectionString);
+                if (oLAGArtikel != null)
                 {
-                    ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = item.Name, Value = item.LaufNr });
+                    string[] oLines = new string[6];
+                    oLines[0] = !String.IsNullOrWhiteSpace(oLAGArtikel.ArtikelNrLAG) ? oLAGArtikel.ArtikelNrLAG : "-";
+                    oLines[1] = !String.IsNullOrWhiteSpace(oLAGArtikel.Bezeichnung1) ? oLAGArtikel.Bezeichnung1 : "-";
+                    oLines[2] = !String.IsNullOrWhiteSpace(oLAGArtikel.Bezeichnung2) ? oLAGArtikel.Bezeichnung2 : "-";
+                    oLines[3] = !String.IsNullOrWhiteSpace(oLAGArtikel.Bezeichnung3) ? oLAGArtikel.Bezeichnung3 : "-";
+                    oLines[4] = !String.IsNullOrWhiteSpace(oLAGArtikel.Bezeichnung4) ? oLAGArtikel.Bezeichnung4 : "-";
+                    oLines[5] = !String.IsNullOrWhiteSpace(oLAGArtikel.Bezeichnung5) ? oLAGArtikel.Bezeichnung5 : "-";
+                    txtProductDesc.Lines = oLines;
+                }
+
+                //load proffix supplier
+                List<ProffixLAGLieferantenModel> oLAGLieferantenList =
+                StorageOperator.GetProffixLAGLieferantenModelList(model.LAGDokumenteArtikelNrLAG, connectionString);
+                if (oLAGLieferantenList != null)
+                {
+                    ddSupplier.Properties.Items.Clear();
+                    //ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = "-", Value = 0 });
+                    foreach (ProffixLAGLieferantenModel item in oLAGLieferantenList)
+                    {
+                        ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = item.Name, Value = item.LaufNr });
+                    }
+                }
+
+                //load proffix product document
+                ProffixLAGDokumente oProffixLAGDokumente = StorageOperator.GetProffixLAGDokumente(model.LAGDokumenteArtikelNrLAG, model.CalculationID.ToString(), connectionString);
+                if (oProffixLAGDokumente != null)
+                {
+                    txtRemark.Text = oProffixLAGDokumente.Bemerkungen;
+                }
+            }
+            else if (!String.IsNullOrWhiteSpace(model.ADRDokumenteDokumentNrADR))
+            {
+                //address
+                ProffixADRAdressenModel oADRAdressen = StorageOperator.GetProffixADRAdressenModel(
+                    model.ADRDokumenteDokumentNrADR, connectionString);
+                if (oADRAdressen != null)
+                {
+                    string[] oLines = new string[6];
+                    oLines[0] = oADRAdressen.AdressNrADR.ToString();
+                    oLines[1] = oADRAdressen.Name;
+                    oLines[2] = oADRAdressen.Vorname;
+                    oLines[3] = oADRAdressen.Adresszeile1;
+                    oLines[4] = oADRAdressen.Adresszeile2;
+                    oLines[5] = String.Format("{0} {1} {2}", oADRAdressen.LandPRO, oADRAdressen.PLZ, oADRAdressen.Ort);
+                    txtProductDesc.Lines = oLines;
+                }
+
+                //set nothing supplier
+                ddSupplier.Properties.Items.Clear();
+                ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = "-", Value = 0 });
+
+                //load proffix address document
+                ProffixADRDokumente oProffixADRDokumente = StorageOperator.GetProffixADRDokumente(model.ADRDokumenteDokumentNrADR, model.CalculationID.ToString(), connectionString);
+                if (oProffixADRDokumente != null)
+                {
+                    txtRemark.Text = oProffixADRDokumente.Bemerkungen;
                 }
             }
 
-            //load proffix document
-            ProffixLAGDokumente oProffixLAGDokumente = StorageOperator.GetProffixLAGDokumente(model.LAGDokumenteArtikelNrLAG, model.CalculationID, connectionString);
-            if (oProffixLAGDokumente != null)
+            if (model.Command == Global.Commands.New)
             {
-                txtRemark.Text = oProffixLAGDokumente.Bemerkungen;
-            }
-
-            if (model.IsNew)
-            {                
                 //new from proffix
                 dtCreate.EditValue = DateTime.Now;
                 btnNew.Enabled = true;
-                btnReset.Enabled = false;
+                //btnReset.Enabled = false;
             }
-            else
+            else if (model.Command == Global.Commands.Open)
             {
                 //load from proffix
                 btnNew.Enabled = false;
-                btnReset.Enabled = true;                                
+                //btnReset.Enabled = true;
+            }
+            else if (model.Command == Global.Commands.Copy)
+            {
+                //copy
+                //load from proffix
+                btnNew.Enabled = false;
+                //btnReset.Enabled = false;
             }
         }
 
@@ -330,7 +368,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             }
 
             btnNew.Enabled = false;
-            btnReset.Enabled = true;
+            //btnReset.Enabled = true;
         }
 
         private void rdoCostTypeList_EditValueChanged(object sender, EventArgs e)
@@ -399,7 +437,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                 _Model = null;
 
                 btnNew.Enabled = true;
-                btnReset.Enabled = false;
+                //btnReset.Enabled = false;
             }
         }
     }

@@ -91,8 +91,8 @@ namespace ProductCalculation.Library.Storage
             dt.Columns.Add(new DataColumn("JsonData8", typeof(string)));
             dt.Columns.Add(new DataColumn("JsonData9", typeof(string)));
             dt.Columns.Add(new DataColumn("JsonData10", typeof(string)));
-            dt.Columns.Add(new DataColumn("CreatedDate", typeof(DateTime)));
-            dt.Columns.Add(new DataColumn("ModifiedDate", typeof(DateTime)));
+            //dt.Columns.Add(new DataColumn("CreatedDate", typeof(DateTime)));
+            //dt.Columns.Add(new DataColumn("ModifiedDate", typeof(DateTime)));
 
             //create new calculation row
             DataRow dr = dt.NewRow();
@@ -103,18 +103,21 @@ namespace ProductCalculation.Library.Storage
             oIgnoreSave.Add(dt.Columns["PriceID"]);
             if (model.ID == 0)
             {
-                //model.ID = CalPriceGetLatestID() + 1;
-                dr["CreatedDate"] = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
-                oIgnoreSave.Add(dt.Columns["ModifiedDate"]);
+                ////model.ID = CalPriceGetLatestID() + 1;
+                //dr["CreatedDate"] = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
+                //oIgnoreSave.Add(dt.Columns["ModifiedDate"]);
 
                 //insert new row first to get id
                 model.ID = InsertRowReturnIdentity(dt.Rows[0], dt.Columns["PriceID"], oIgnoreSave.ToArray());
+
             }
-            else
-            {
-                dr["ModifiedDate"] = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
-                oIgnoreSave.Add(dt.Columns["CreatedDate"]);
-            }
+            //else
+            //{
+            //    //dr["ModifiedDate"] = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
+            //    //oIgnoreSave.Add(dt.Columns["CreatedDate"]);
+            //}
+
+            model.CalculaionDateTime = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
 
             dr["PriceID"] = model.ID;
 
@@ -153,24 +156,31 @@ namespace ProductCalculation.Library.Storage
                 return;
             }
 
-            if (String.IsNullOrWhiteSpace(model.ProffixModel.LAGDokumenteArtikelNrLAG))
+
+            //1. save LAG_Dokumente or ADR_Dokumente
+            if (!String.IsNullOrWhiteSpace(model.ProffixModel.LAGDokumenteArtikelNrLAG))
             {
-                return;
+                SaveLAG_Dokumente(model);
+            }
+            else if (!String.IsNullOrWhiteSpace(model.ProffixModel.ADRDokumenteDokumentNrADR))
+            {
+                SaveADR_Dokumente(model);
             }
 
-            //1. save LAG_Dokumente
-            SaveLAG_Dokumente(model);
 
             //2. save LAG_Artikel
             if (model.GeneralSetting.PriceScale.Scale == 1 && model.GeneralSetting.Options.Contains("A"))
             {
-                SaveLAG_Artikel(model);
+                if (!String.IsNullOrWhiteSpace(model.ProffixModel.LAGDokumenteArtikelNrLAG))
+                {
+                    SaveLAG_Artikel(model);
+                }                
             }
 
             //3. save scale if needed
             if (model.GeneralSetting.PriceScale.Scale > 1 && model.GeneralSetting.Options.Contains("A"))
             {
-                SavePRE_PreisStaffel(model);                
+                SavePRE_PreisStaffel(model);
             }
         }
     }

@@ -36,7 +36,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
         ICalculation _Calculation = new BasicCalculation();
         MarginCalculation _MarginCalculation = new MarginCalculation();
 
-        CalculationModel _Model;               
+        CalculationModel _Model;
 
         List<GridColumn> emptyColumns = new List<GridColumn>();
         bool _AddedEmptyColumn = false;
@@ -119,38 +119,50 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             return _Model;
         }
 
-        public void LoadProffixCalculation(GeneralSettingModel generalSettingModel, PriceCalculationSetting moduleSetting, string[] arguments)
-        {
-            //ProffixResult oResult = new ProffixResult(arguments);
-
-            //if (arguments != null)
-            //{
-            //    if (arguments.Length == 2)
-            //    {
-            //        if (arguments[1].TrimStart().TrimEnd().Trim().StartsWith("opencal"))
-            //        {
-            //            //new or load
-            //            string[] sSubParam = arguments[1].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-
-            //            if (sSubParam.Length == 2)
-            //            {
-            //                //new
-            //                NewCalculation(generalSettingModel, moduleSetting, sSubParam[1]);
-            //            }
-            //            else if (sSubParam.Length > 2)
-            //            {
-            //                //load
-            //            }
-            //        }
-            //    }
-            //}
-        }
-
         public void LoadCalculation(CalculationModel model, PriceCalculationSetting moduleSetting)
         {
             model.ProffixConnection = moduleSetting.ProffixConnection;
-            
+
             _Model = model;
+
+            //setup everythings
+            SetUpCalculation();
+        }
+
+        public void CopyCalculation(CalculationModel model, PriceCalculationSetting moduleSetting)
+        {
+            model.ProffixConnection = moduleSetting.ProffixConnection;
+
+            _Model = model;
+
+            //if copy
+            if (model.ProffixModel != null && model.ProffixModel.Command == Global.Commands.Copy)
+            {
+                if (model.ProffixModel.CopyScale > 0)
+                {
+                    //count scale
+                    int countScale = model.CalculationNotes.Count(item => item.ID > 0);
+
+                    if (model.ProffixModel.CopyScale > countScale)
+                    {
+                        //add scale from last
+                        //6 to 10, so add by 4
+                        int differ = model.ProffixModel.CopyScale - countScale;
+                        model.ExtendScaleCalculationNote(moduleSetting.PriceSetting, differ);
+                    }
+                    else if (model.ProffixModel.CopyScale < countScale)
+                    {
+                        //remove scale from last
+                        //6 to 2, so remove by 4
+                        int differ = countScale - model.ProffixModel.CopyScale;
+                        while (differ > 0)
+                        {
+                            model.CalculationNotes.RemoveAt(model.CalculationNotes.Count - 1);
+                            differ = differ - 1;
+                        }
+                    }
+                }
+            }
 
             //setup everythings
             SetUpCalculation();
@@ -321,7 +333,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                 ButtonEdit ed = (ButtonEdit)gridView1.ActiveEditor;
                 if (sValue == "CHF")
                 {
-                    _Calculation.UpdateCalculationRowCurrency(_Model, gridView1.GetDataSourceRowIndex(gridView1.FocusedRowHandle), _Model.GeneralSetting.Currency.Currency);                    
+                    _Calculation.UpdateCalculationRowCurrency(_Model, gridView1.GetDataSourceRowIndex(gridView1.FocusedRowHandle), _Model.GeneralSetting.Currency.Currency);
                 }
                 else
                 {

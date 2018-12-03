@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Web.Script.Serialization;
+using ProductCalculation.Library.Global;
 
 namespace ProductCalculation.Library.Entity.PriceCalculation.Models
 {
@@ -14,10 +15,20 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
     {
         public int LaufNr { get; set; } //unique no.
         public string ArtikelNrLAG { get; set; }
+        //public int DokumentNrADR { get; set; }
         public string Bemerkungen { get; set; }
         public string DateiName { get; set; }
-        //public DateTime Datum { get; set; }
     }
+
+    public class ProffixADRDokumente
+    {
+        public int LaufNr { get; set; } //unique no.
+        public int AdressNrADR { get; set; }
+        public int DokumentNrADR { get; set; }
+        public string Bemerkungen { get; set; }
+        public string DateiName { get; set; }
+    }
+
     public class ProffixLAGArtikelModel
     {
         public int LaufNr { get; set; } //unique no.
@@ -27,6 +38,19 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
         public string Bezeichnung3 { get; set; }
         public string Bezeichnung4 { get; set; }
         public string Bezeichnung5 { get; set; }
+    }
+
+    public class ProffixADRAdressenModel
+    {
+        public int LaufNr { get; set; } //unique no.
+        public int AdressNrADR { get; set; } //line 1
+        public string Name { get; set; } //line 2
+        public string Vorname { get; set; } //line 3
+        public string Adresszeile1 { get; set; } //line 4
+        public string Adresszeile2 { get; set; } // line 5       
+        public string LandPRO { get; set; } //line 6 (LandPRO + PLZ + Ort)
+        public string PLZ { get; set; }
+        public string Ort { get; set; }
     }
 
     public class ProffixLAGLieferantenModel
@@ -72,45 +96,123 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
 
     public class ProffixModel
     {
-        public bool IsNew { get; set; }
-        public bool IsLoad { get; set; }
+        //[ScriptIgnore]
+        //public bool IsNew { get; set; }
 
+        //[ScriptIgnore]
+        //public bool IsLoad { get; set; }
+
+        //[ScriptIgnore]
+        //public bool IsCopy { get; set; }
+    
         //keep LAG_Dokumente
+        //if calcluation for Artikel
         public string LAGDokumenteArtikelNrLAG { get; set; }
+
         public int LAGDokumenteLaufNr { get; set; } // primary no.
 
+
+        //keep ADR_Dokumente
+        //if calculation for Dokumente
+        public string ADRDokumenteDokumentNrADR { get; set; }
+
+        public int ADRDokumenteLaufNr { get; set; } // primary no.
+
         //keep CalPrice
-        public string CalculationID { get; set; }
+        public long CalculationID { get; set; }
+
+        [ScriptIgnore]
+        public Commands Command { get; set; }
+
+        [ScriptIgnore]
+        public int CopyScale { get; set; }
+
+
+        [ScriptIgnore]
+        public string AppPath { get; set; }
 
         public void SetModel(string[] arguments)
         {
-            //if call from proffix
-            if (arguments != null)
-            {
-                if (arguments.Length == 2)
-                {
-                    if (arguments[1].TrimStart().TrimEnd().Trim().StartsWith("open"))
-                    {
-                        //new or load
-                        string[] sSubParam = arguments[1].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+            Command = Commands.New;
 
-                        if (sSubParam.Length == 2)
+            //if call from proffix
+            if (arguments != null && arguments.Length == 2)
+            {
+                AppPath = arguments[0];
+
+                //arguments[0] is application path, ignore it
+                //arguments[1] is calculation command
+                //opena 165442 53555 or open 165442 53555
+                //53555 is calculation id
+                string[] sSubParam = arguments[1].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (sSubParam != null && sSubParam.Length > 0)
+                {
+
+                    //open
+                    if (sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("open") ||
+                        sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("opena"))
+                    {
+                        //new
+                        //IsNew = true;
+
+                        if (sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("open"))
                         {
-                            //new  
-                            IsNew = true;
                             LAGDokumenteArtikelNrLAG = sSubParam[1];
                         }
-                        else if (sSubParam.Length > 2)
+                        else if (sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("opena"))
                         {
+                            ADRDokumenteDokumentNrADR = sSubParam[1];
+                        }
+
+                        if (sSubParam.Length > 2)
+                        {
+                            //Command = Commands.Open;
                             //load
-                            IsLoad = true;
-                            LAGDokumenteArtikelNrLAG = sSubParam[1];
+                            //IsNew = false;
+                            //IsLoad = true;
                             try
                             {
-                                CalculationID = sSubParam[2];
+                                CalculationID = Convert.ToInt64(sSubParam[2]);
                             }
                             catch { }
+
+                            if (CalculationID > 0)
+                            {
+                                Command = Commands.Open;
+                            }
                         }
+                    }
+                    else if (sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("copy") ||
+                            sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("copya"))
+                    {
+                        //copy
+                        //IsCopy = true;
+                        //IsNew = false;
+                        //IsLoad = false;
+
+                        if (sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("open"))
+                        {
+                            LAGDokumenteArtikelNrLAG = sSubParam[1];
+                        }
+                        else if (sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("opena"))
+                        {
+                            ADRDokumenteDokumentNrADR = sSubParam[1];
+                        }
+
+                        try
+                        {
+                            CalculationID = Convert.ToInt64(sSubParam[2]);
+                        }
+                        catch { }
+
+                        try
+                        {
+                            CopyScale = Convert.ToInt32(sSubParam[3]);
+                        }
+                        catch { }
+
+                        Command = Commands.Copy;
                     }
                 }
             }
@@ -119,7 +221,7 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
 
     public class CopyCalculationModel
     {
-        public string AddressNo { get; set; } 
+        public string AddressNo { get; set; }
         public string ProductNo { get; set; }
         public int Scale { get; set; }
     }
@@ -426,7 +528,15 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
         public ProffixModel ProffixModel { get; set; }
 
         [ScriptIgnore]
-        public string ProffixConnection { get; set; }
+        public string ProffixConnection { get; set; }  
+
+        public string CalculaionDateTime { get; set; }
+
+        //[ScriptIgnore]
+        //public bool IsCopy { get; set; }
+
+        //[ScriptIgnore]
+        //public int CopyScale { get; set; }
 
         public override string ToString()
         {
