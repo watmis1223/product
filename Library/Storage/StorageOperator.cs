@@ -69,14 +69,19 @@ namespace ProductCalculation.Library.Storage
                 {
                     isExceptColumn = false;
 
-                    foreach (DataColumn exceptDc in exceptSaveColumns)
+                    if (exceptSaveColumns.Where(item => item.ColumnName == dc.ColumnName).FirstOrDefault() != null)
                     {
-                        if (dc.ColumnName == exceptDc.ColumnName)
-                        {
-                            isExceptColumn = true;
-                            break;
-                        }
+                        isExceptColumn = true;                        
                     }
+
+                    //foreach (DataColumn exceptDc in exceptSaveColumns)
+                    //{
+                    //    if (dc.ColumnName == exceptDc.ColumnName)
+                    //    {
+                    //        isExceptColumn = true;
+                    //        break;
+                    //    }
+                    //}
 
                     if (!isExceptColumn)
                     {
@@ -245,7 +250,7 @@ namespace ProductCalculation.Library.Storage
             return iIdentity;
         }
 
-        public static void InsertRowManualIncreaseID(DataRow dr, DataColumn primaryKey, DataColumn[] ignoreSaveColumns, string connectionString = null)
+        public static void InsertRowManualIncreaseID(DataRow dr, DataColumn primaryKey, DataColumn[] ignoreSaveColumns, DataColumn[] customDataColumns, string connectionString = null)
         {
 
             StringBuilder query = new StringBuilder();
@@ -280,7 +285,15 @@ namespace ProductCalculation.Library.Storage
                     }
                     else
                     {
-                        queryValues.AppendFormat("{0},", GetValueString(dc, dr));
+                        if (customDataColumns != null && 
+                            customDataColumns.Where(item => item.ColumnName == dc.ColumnName).FirstOrDefault() != null)
+                        {
+                            queryValues.AppendFormat("{0},", dr[dc.ColumnName]);
+                        }
+                        else
+                        {
+                            queryValues.AppendFormat("{0},", GetValueString(dc, dr));
+                        }
                     }
                 }
                 queryValues.Remove(queryValues.Length - 1, 1);

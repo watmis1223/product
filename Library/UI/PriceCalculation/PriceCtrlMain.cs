@@ -24,6 +24,9 @@ namespace ProductCalculation.Library.UI.PriceCalculation
         public delegate void CopyCallback(string copyCommand);
         public event CopyCallback Copy;
 
+        public delegate void SavedCallback(string message);
+        public event SavedCallback Saved;
+
         PriceCalculationSetting _PriceCalculationSetting;
 
         List<ComboboxItemModel> _CalculationList = new List<ComboboxItemModel>();
@@ -51,7 +54,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
         }
 
         public void ModuleSettingMode()
-        {
+        {           
             settingTabPage.PageVisible = true;
             generalTabPage.PageVisible = false;
             calculationTabPage.PageVisible = false;
@@ -105,6 +108,16 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 
         public void ModuleCalculationByProffixMode(string[] arguments)
         {
+            if (mainTabControl.SelectedTabPage == settingTabPage)
+            {
+                settingTabPage.PageVisible = false;
+                generalTabPage.PageVisible = true;
+                calculationTabPage.PageVisible = isCalculationTabVisible;
+                mainTabControl.SelectedTabPage = generalTabPage;
+
+                return;
+            }
+
             _Aarguments = arguments;
 
             settingTabPage.PageVisible = false;
@@ -221,9 +234,14 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             }
         }
 
-        private void calculationBasicCtrl1_SaveChanged()
+        private void calculationBasicCtrl1_SaveChanged(string message)
         {
             _Aarguments = null;
+
+            if (Saved != null)
+            {
+                Saved(message);
+            }
         }
     }
 }

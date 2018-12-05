@@ -30,7 +30,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 {
     public partial class CalculationBasicCtrl : DevExpress.XtraEditors.XtraUserControl
     {
-        public delegate void SaveChangedCallback();
+        public delegate void SaveChangedCallback(string message);
         public event SaveChangedCallback SaveChanged;
 
         ICalculation _Calculation = new BasicCalculation();
@@ -230,11 +230,20 @@ namespace ProductCalculation.Library.UI.PriceCalculation
         private void btnSave_Click(object sender, EventArgs e)
         {
             //save model to db
-            StorageOperator.SaveModel(_Model);
+            string sMessage = "Die Speicherung ist abgeschlossen.";
+            try
+            {
+                StorageOperator.SaveModel(_Model);
+            }
+            catch (Exception ex)
+            {
+                sMessage = ex.Message;
+            }
 
             if (SaveChanged != null)
             {
-                SaveChanged();
+                //success
+                SaveChanged(sMessage);
             }
         }
 

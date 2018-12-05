@@ -130,7 +130,7 @@ namespace ProductCalculation.Library.Storage
 
                     dt.Rows.Add(dr);
 
-                    InsertRowManualIncreaseID(dr, dt.Columns["LaufNr"], null, connectionString: model.ProffixConnection);
+                    InsertRowManualIncreaseID(dr, dt.Columns["LaufNr"], null, null, connectionString: model.ProffixConnection);
                 }
             }
         }

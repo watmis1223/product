@@ -26,7 +26,8 @@ namespace ProductCalculation
 
             _Args = arguments;
             _PriceModule.Copy += _PriceModule_Copy;
-        }
+            _PriceModule.Saved += _PriceModule_Saved;
+        }        
 
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -34,7 +35,7 @@ namespace ProductCalculation
 
             _PriceModule.Dock = DockStyle.Fill;
 
-            CallByProffix(_Args);            
+            CallByProffix(_Args);
         }
 
         public void ShowModule(ApplicationModules module, params string[] arguments)
@@ -75,10 +76,10 @@ namespace ProductCalculation
                 {
                     isProffixLoad = true;
 
-                    if (_Args[1].Split(new string[] { " "}, StringSplitOptions.RemoveEmptyEntries).Length > 2)
-                    {                        
+                    if (_Args[1].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).Length > 2)
+                    {
                         ribbonPageGroup2.Visible = true;
-                    }                    
+                    }
                 }
                 else if (_Args[1].StartsWith("copy"))
                 {
@@ -92,7 +93,7 @@ namespace ProductCalculation
             if (!isProffixLoad)
             {
                 brBtnPriceCalculation_ItemClick(this, null);
-            }           
+            }
         }
 
         private void brBtnOil_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -103,7 +104,10 @@ namespace ProductCalculation
         private void brBtnPriceCalculation_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             //ShowModule(ApplicationModules.PriceModuleCalculation);
-            ShowModule(ApplicationModules.PriceModuleCalculationByProffix, new string[] { _Args[0], _Args[1] });
+            if (_Args != null && _Args.Length >= 2)
+            {
+                ShowModule(ApplicationModules.PriceModuleCalculationByProffix, new string[] { _Args[0], _Args[1] });
+            }
         }
 
         private void brBtnPriceSetting_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -114,6 +118,11 @@ namespace ProductCalculation
         private void brBtnCopy_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ShowModule(ApplicationModules.PriceModuleCopyCalculation);
+        }
+        private void _PriceModule_Saved(string message)
+        {
+            _Args = null;
+            MessageBox.Show(message, "Price Calculation", MessageBoxButtons.OK);
         }
 
         private void _PriceModule_Copy(string copyCommand)

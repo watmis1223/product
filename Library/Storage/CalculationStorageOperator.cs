@@ -79,74 +79,71 @@ namespace ProductCalculation.Library.Storage
 
         public static void SaveModel(CalculationModel model)
         {
-            DataTable dt = new DataTable("CalPrice");
-            dt.Columns.Add(new DataColumn("PriceID", typeof(long)));
-            dt.Columns.Add(new DataColumn("JsonData1", typeof(string)));
-            dt.Columns.Add(new DataColumn("JsonData2", typeof(string)));
-            dt.Columns.Add(new DataColumn("JsonData3", typeof(string)));
-            dt.Columns.Add(new DataColumn("JsonData4", typeof(string)));
-            dt.Columns.Add(new DataColumn("JsonData5", typeof(string)));
-            dt.Columns.Add(new DataColumn("JsonData6", typeof(string)));
-            dt.Columns.Add(new DataColumn("JsonData7", typeof(string)));
-            dt.Columns.Add(new DataColumn("JsonData8", typeof(string)));
-            dt.Columns.Add(new DataColumn("JsonData9", typeof(string)));
-            dt.Columns.Add(new DataColumn("JsonData10", typeof(string)));
-            //dt.Columns.Add(new DataColumn("CreatedDate", typeof(DateTime)));
-            //dt.Columns.Add(new DataColumn("ModifiedDate", typeof(DateTime)));
-
-            //create new calculation row
-            DataRow dr = dt.NewRow();
-            dt.Rows.Add(dr);
-
-            //set insert columns
-            List<DataColumn> oIgnoreSave = new List<DataColumn>();
-            oIgnoreSave.Add(dt.Columns["PriceID"]);
-            if (model.ID == 0)
+            try
             {
-                ////model.ID = CalPriceGetLatestID() + 1;
-                //dr["CreatedDate"] = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
-                //oIgnoreSave.Add(dt.Columns["ModifiedDate"]);
+                DataTable dt = new DataTable("CalPrice");
+                dt.Columns.Add(new DataColumn("PriceID", typeof(long)));
+                dt.Columns.Add(new DataColumn("JsonData1", typeof(string)));
+                dt.Columns.Add(new DataColumn("JsonData2", typeof(string)));
+                dt.Columns.Add(new DataColumn("JsonData3", typeof(string)));
+                dt.Columns.Add(new DataColumn("JsonData4", typeof(string)));
+                dt.Columns.Add(new DataColumn("JsonData5", typeof(string)));
+                dt.Columns.Add(new DataColumn("JsonData6", typeof(string)));
+                dt.Columns.Add(new DataColumn("JsonData7", typeof(string)));
+                dt.Columns.Add(new DataColumn("JsonData8", typeof(string)));
+                dt.Columns.Add(new DataColumn("JsonData9", typeof(string)));
+                dt.Columns.Add(new DataColumn("JsonData10", typeof(string)));
 
-                //insert new row first to get id
-                model.ID = InsertRowReturnIdentity(dt.Rows[0], dt.Columns["PriceID"], oIgnoreSave.ToArray());
+                //create new calculation row
+                DataRow dr = dt.NewRow();
+                dt.Rows.Add(dr);
 
-            }
-            //else
-            //{
-            //    //dr["ModifiedDate"] = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
-            //    //oIgnoreSave.Add(dt.Columns["CreatedDate"]);
-            //}
-
-            model.CalculaionDateTime = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
-
-            dr["PriceID"] = model.ID;
-
-            string sJson = Utility.ObjectToJson(model);
-            string sCompress = Zipper.Zip(sJson);
-
-            //extract encode json to JsonData1 to JsonData10
-            int i = 1;
-            while (!String.IsNullOrWhiteSpace(sCompress))
-            {
-                if (sCompress.Length >= 3000)
+                //set insert columns
+                List<DataColumn> oIgnoreSave = new List<DataColumn>();
+                oIgnoreSave.Add(dt.Columns["PriceID"]);
+                if (model.ID == 0)
                 {
-                    dr[String.Concat("JsonData", i)] = sCompress.Substring(0, 4000);
-                    sCompress = sCompress.Remove(0, 3000);
-                }
-                else
-                {
-                    dr[String.Concat("JsonData", i)] = sCompress.Substring(0);
-                    sCompress = sCompress.Remove(0, sCompress.Length);
+                    //insert new row first to get id
+                    dr["JsonData1"] = "NEW";
+                    model.ID = InsertRowReturnIdentity(dt.Rows[0], dt.Columns["PriceID"], oIgnoreSave.ToArray());
+
                 }
 
-                i += 1;
+                model.CalculaionDateTime = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
+
+                dr["PriceID"] = model.ID;
+
+                string sJson = Utility.ObjectToJson(model);
+                string sCompress = Zipper.Zip(sJson);
+
+                //extract encode json to JsonData1 to JsonData10
+                int i = 1;
+                while (!String.IsNullOrWhiteSpace(sCompress))
+                {
+                    if (sCompress.Length >= 3000)
+                    {
+                        dr[String.Concat("JsonData", i)] = sCompress.Substring(0, 4000);
+                        sCompress = sCompress.Remove(0, 3000);
+                    }
+                    else
+                    {
+                        dr[String.Concat("JsonData", i)] = sCompress.Substring(0);
+                        sCompress = sCompress.Remove(0, sCompress.Length);
+                    }
+
+                    i += 1;
+                }
+
+                //update jsondata by particular row
+                SaveTable(dt, dt.Columns["PriceID"], oIgnoreSave.ToArray());
+
+                //save proffix if needed
+                SaveProffix(model);
             }
-
-            //update jsondata by particular row
-            SaveTable(dt, dt.Columns["PriceID"], oIgnoreSave.ToArray());
-
-            //save proffix if needed
-            SaveProffix(model);
+            catch (Exception ex)
+            {
+                throw ex;
+            }            
         }
 
         public static void SaveProffix(CalculationModel model)
@@ -174,7 +171,7 @@ namespace ProductCalculation.Library.Storage
                 if (!String.IsNullOrWhiteSpace(model.ProffixModel.LAGDokumenteArtikelNrLAG))
                 {
                     SaveLAG_Artikel(model);
-                }                
+                }
             }
 
             //3. save scale if needed
