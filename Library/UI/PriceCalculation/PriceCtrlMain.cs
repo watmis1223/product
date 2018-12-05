@@ -48,6 +48,28 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             generalCtrl1.SetTextLine(_PriceCalculationSetting.TextSetting);
         }
 
+        public void NewCalculation()
+        {
+            if (generalCtrl1 != null)
+            {
+                generalCtrl1.NewCalculation();
+            }
+        }
+
+        public void SaveCalculation()
+        {
+            if (generalCtrl1 != null)
+            {
+                generalCtrl1.UpdateModel();
+            }
+
+            if (calculationBasicCtrl1 != null)
+            {
+
+                calculationBasicCtrl1.SaveModel(generalCtrl1.GetModel());
+            }
+        }
+
         public void ModuleCalculationMode()
         {
             generalTabPage.PageVisible = true;
@@ -66,38 +88,73 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             calculationTabPage.PageVisible = false;
             mainTabControl.SelectedTabPage = isCalculationTabVisible ? calculationTabPage : generalTabPage;
 
-            //if (_PriceCalculationSetting == null)
-            //{
-            //    ReloadPriceCalculationSetting(true);
-            //}
 
             //if call from proffix, arguments should not null
             ProffixModel oProffix = new ProffixModel();
             oProffix.SetModel(arguments);
 
+            //string[] sSubParam = arguments[1].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+            //MessageBox.Show(String.Format("{0} {1} {2} {3}",
+            //sSubParam[0],
+            //sSubParam[1],
+            //sSubParam[2],
+            //oProffix.Command.ToString()
+            //));
+
+            //MessageBox.Show(String.Format("{0}",            
+            //arguments[1]
+            //));
+
+            //load cal setting from db
+            CalculationModel oCal = StorageOperator.CalPriceLoadByID(Convert.ToInt64(oProffix.CalculationID));
+
             //set general info
-            generalCtrl1.SetProffixParam(oProffix, _PriceCalculationSetting.ProffixConnection);
-
-            //load or copy
-            if (oProffix.Command == Global.Commands.Open || oProffix.Command == Global.Commands.Copy)
+            if (oCal != null)
             {
-                //load cal setting from db
-                CalculationModel oCal = StorageOperator.CalPriceLoadByID(Convert.ToInt64(oProffix.CalculationID));
-                if (oCal != null)
+                if (oProffix.Command == Global.Commands.Copy)
                 {
-                    oCal.ProffixModel = oProffix;
+                    oCal.ProffixModel.CalculationID = oCal.ID;
+                    oCal.ID = 0;
+                    oCal.ProffixModel.ADRDokumenteLaufNr = 0;
+                    oCal.ProffixModel.LAGDokumenteLaufNr = 0;
+                    oCal.ProffixModel.ADRDokumenteDokumentNrADR = oProffix.ADRDokumenteDokumentNrADR;
+                    oCal.ProffixModel.LAGDokumenteArtikelNrLAG = oProffix.LAGDokumenteArtikelNrLAG;
+                    oCal.ProffixModel.CopyScale = oProffix.CopyScale;
+                    oCal.ProffixModel.Command = Global.Commands.Copy;
+                    oCal.ProffixModel.AppPath = oProffix.AppPath;
+                }
+                else if (oProffix.Command == Global.Commands.Open)
+                {
+                    oCal.ProffixModel.CalculationID = oCal.ID;                    
+                    oCal.ProffixModel.Command = Global.Commands.Open;
+                }
 
-                    if (oProffix.Command == Global.Commands.Copy)
-                    {
-                        oCal.ID = 0;
-                    }
+                //MessageBox.Show(String.Format("{0} {1} {2} {3} {4} {5} {6} {7}",
+                //oCal.ID,
+                //oCal.ProffixModel.CalculationID,
+                //oCal.ProffixModel.ADRDokumenteLaufNr,
+                //oCal.ProffixModel.LAGDokumenteLaufNr,
+                //oCal.ProffixModel.ADRDokumenteDokumentNrADR,
+                //oCal.ProffixModel.LAGDokumenteArtikelNrLAG,
+                //oCal.ProffixModel.CopyScale,
+                //oCal.ProffixModel.Command.ToString()
+                //));
 
+                generalCtrl1.SetProffixParam(oCal.ProffixModel, _PriceCalculationSetting.ProffixConnection);
+
+                //load or copy
+                if (oProffix.Command == Global.Commands.Open || oProffix.Command == Global.Commands.Copy)
+                {
                     calculationTabPage.PageVisible = true;
 
                     generalCtrl1.LoadCalculation(oCal);
 
                     calculationBasicCtrl1.LoadCalculation(oCal, _PriceCalculationSetting);
                 }
+            }
+            else
+            {
+                generalCtrl1.SetProffixParam(oProffix, _PriceCalculationSetting.ProffixConnection);
             }
         }
 
@@ -109,7 +166,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                 if (!isCalculationTabVisible)
                 {
                     _PriceCalculationSetting = ApplicationOperator.GetPriceCalculationSetting();
-                }                
+                }
             }
         }
 

@@ -32,8 +32,11 @@
             this.brBrnPrice = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnPriceSetting = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnCopy = new DevExpress.XtraBars.BarButtonItem();
+            this.brBtnNew = new DevExpress.XtraBars.BarButtonItem();
+            this.brBtnSave = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.pnlMain = new DevExpress.XtraEditors.PanelControl();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlMain)).BeginInit();
@@ -46,9 +49,11 @@
             this.ribbonControl1.ExpandCollapseItem,
             this.brBrnPrice,
             this.brBtnPriceSetting,
-            this.brBtnCopy});
+            this.brBtnCopy,
+            this.brBtnNew,
+            this.brBtnSave});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 11;
+            this.ribbonControl1.MaxItemId = 13;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -57,7 +62,7 @@
             // 
             // brBrnPrice
             // 
-            this.brBrnPrice.Caption = "Calculation";
+            this.brBrnPrice.Caption = "General";
             this.brBrnPrice.Id = 4;
             this.brBrnPrice.ImageOptions.Image = global::ProductCalculation.Properties.Resources.tag_16x16;
             this.brBrnPrice.ImageOptions.LargeImage = global::ProductCalculation.Properties.Resources.tag_32x32;
@@ -85,19 +90,46 @@
             this.brBtnCopy.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             this.brBtnCopy.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnCopy_ItemClick);
             // 
+            // brBtnNew
+            // 
+            this.brBtnNew.Caption = "New";
+            this.brBtnNew.Id = 11;
+            this.brBtnNew.ImageOptions.Image = global::ProductCalculation.Properties.Resources.insert_16x16;
+            this.brBtnNew.ImageOptions.LargeImage = global::ProductCalculation.Properties.Resources.insert_32x32;
+            this.brBtnNew.Name = "brBtnNew";
+            this.brBtnNew.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.brBtnNew.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnNew_ItemClick);
+            // 
+            // brBtnSave
+            // 
+            this.brBtnSave.Caption = "Save";
+            this.brBtnSave.Id = 12;
+            this.brBtnSave.ImageOptions.Image = global::ProductCalculation.Properties.Resources.saveas_16x16;
+            this.brBtnSave.ImageOptions.LargeImage = global::ProductCalculation.Properties.Resources.saveas_32x32;
+            this.brBtnSave.Name = "brBtnSave";
+            this.brBtnSave.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.brBtnSave.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnSave_ItemClick);
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup1});
+            this.ribbonPageGroup1,
+            this.ribbonPageGroup2});
             this.ribbonPage1.Name = "ribbonPage1";
             this.ribbonPage1.Text = "Module";
             // 
             // ribbonPageGroup1
             // 
             this.ribbonPageGroup1.ItemLinks.Add(this.brBrnPrice);
-            this.ribbonPageGroup1.ItemLinks.Add(this.brBtnCopy);
             this.ribbonPageGroup1.ItemLinks.Add(this.brBtnPriceSetting);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
+            // 
+            // ribbonPageGroup2
+            // 
+            this.ribbonPageGroup2.ItemLinks.Add(this.brBtnNew);
+            this.ribbonPageGroup2.ItemLinks.Add(this.brBtnCopy);
+            this.ribbonPageGroup2.ItemLinks.Add(this.brBtnSave);
+            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
             // 
             // pnlMain
             // 
@@ -139,5 +171,8 @@
         private DevExpress.XtraBars.BarButtonItem brBtnPriceSetting;
         private DevExpress.XtraEditors.PanelControl pnlMain;
         private DevExpress.XtraBars.BarButtonItem brBtnCopy;
+        private DevExpress.XtraBars.BarButtonItem brBtnNew;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
+        private DevExpress.XtraBars.BarButtonItem brBtnSave;
     }
 }

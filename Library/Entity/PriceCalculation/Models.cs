@@ -104,7 +104,7 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
 
         //[ScriptIgnore]
         //public bool IsCopy { get; set; }
-    
+
         //keep LAG_Dokumente
         //if calcluation for Artikel
         public string LAGDokumenteArtikelNrLAG { get; set; }
@@ -136,7 +136,7 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
             Command = Commands.New;
 
             //if call from proffix
-            if (arguments != null && arguments.Length == 2)
+            if (arguments != null && arguments.Length >= 2)
             {
                 AppPath = arguments[0];
 
@@ -165,22 +165,19 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
                             ADRDokumenteDokumentNrADR = sSubParam[1];
                         }
 
-                        if (sSubParam.Length > 2)
+                        //Command = Commands.Open;
+                        //load
+                        //IsNew = false;
+                        //IsLoad = true;
+                        try
                         {
-                            //Command = Commands.Open;
-                            //load
-                            //IsNew = false;
-                            //IsLoad = true;
-                            try
-                            {
-                                CalculationID = Convert.ToInt64(sSubParam[2]);
-                            }
-                            catch { }
+                            CalculationID = Convert.ToInt64(sSubParam[2]);
+                        }
+                        catch { }
 
-                            if (CalculationID > 0)
-                            {
-                                Command = Commands.Open;
-                            }
+                        if (CalculationID > 0)
+                        {
+                            Command = Commands.Open;
                         }
                     }
                     else if (sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("copy") ||
@@ -191,11 +188,11 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
                         //IsNew = false;
                         //IsLoad = false;
 
-                        if (sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("open"))
+                        if (sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("copy"))
                         {
                             LAGDokumenteArtikelNrLAG = sSubParam[1];
                         }
-                        else if (sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("opena"))
+                        else if (sSubParam[0].TrimStart().TrimEnd().Trim().StartsWith("copya"))
                         {
                             ADRDokumenteDokumentNrADR = sSubParam[1];
                         }
@@ -528,7 +525,7 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
         public ProffixModel ProffixModel { get; set; }
 
         [ScriptIgnore]
-        public string ProffixConnection { get; set; }  
+        public string ProffixConnection { get; set; }
 
         public string CalculaionDateTime { get; set; }
 

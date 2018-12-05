@@ -85,6 +85,29 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             this.layoutControlItem5.Visibility = DevExpress.XtraLayout.Utils.LayoutVisibility.Never;
         }
 
+        public void SaveModel(GeneralSettingModel setting)
+        {
+            if (_Model == null)
+            {
+                return;
+            }
+
+            if (setting != null)
+            {
+                _Model.GeneralSetting.Remark = setting.Remark;
+                _Model.GeneralSetting.Supplier = setting.Supplier;
+                _Model.GeneralSetting.Employee = setting.Employee;
+                _Model.GeneralSetting.Info = setting.Info;
+                _Model.GeneralSetting.CreateDate = setting.CreateDate;
+
+                _Model.GeneralSetting.Convert = setting.Convert;
+                _Model.GeneralSetting.Currency = setting.Currency;
+                _Model.GeneralSetting.Options = setting.Options;
+            }
+
+            btnSave_Click(null, null);
+        }
+
         void GridControl_Paint(object sender, PaintEventArgs e)
         {
             //paint empty vertical column(s)

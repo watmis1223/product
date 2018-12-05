@@ -107,11 +107,13 @@ namespace ProductCalculation.Library.Storage
                     dr["JsonData1"] = "NEW";
                     model.ID = InsertRowReturnIdentity(dt.Rows[0], dt.Columns["PriceID"], oIgnoreSave.ToArray());
                 }
-
-                model.CalculaionDateTime = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
-
                 dr["PriceID"] = model.ID;
 
+                //save proffix if needed
+                SaveProffix(model);
+
+                //update calculation
+                model.CalculaionDateTime = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));                
                 string sJson = Utility.ObjectToJson(model);
                 string sCompress = Zipper.Zip(sJson);
 
@@ -132,15 +134,15 @@ namespace ProductCalculation.Library.Storage
 
                     i += 1;
                 }
-
                 //update jsondata by particular row
                 SaveTable(dt, dt.Columns["PriceID"], oIgnoreSave.ToArray());
 
-                //save proffix if needed
-                SaveProffix(model);
 
-                //after save succes
-                model.ProffixModel.Command = Global.Commands.Open;
+                //after save success
+                if (model.ProffixModel != null)
+                {
+                    model.ProffixModel.Command = Global.Commands.Open;
+                }
             }
             catch (Exception ex)
             {

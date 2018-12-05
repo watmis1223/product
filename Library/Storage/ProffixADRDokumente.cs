@@ -53,14 +53,14 @@ namespace ProductCalculation.Library.Storage
                 DataTable dt = new DataTable();
                 dt.TableName = _LAG_Dokumente;
                 dt.Columns.Add(new DataColumn("LaufNr", typeof(Int32)));
-                dt.Columns.Add(new DataColumn("DateiName", typeof(string)));
+                //dt.Columns.Add(new DataColumn("DateiName", typeof(string)));
                 dt.Columns.Add(new DataColumn("Bezeichnung", typeof(string)));
                 dt.Columns.Add(new DataColumn("Bemerkungen", typeof(string)));
                 DataRow dr = dt.NewRow();
                 dt.Rows.Add(dr);
 
                 dr["LaufNr"] = oDokumente.LaufNr;
-                dr["DateiName"] = String.Concat(oDokumente.DateiName, " ", model.ID);
+                //dr["DateiName"] = String.Concat(oDokumente.DateiName, " ", model.ID);
 
                 //Kalk. VP 01.12.2017 Aktiv Oldenburg Kunststoff-Te
                 string sBezeichnung = String.Concat(
@@ -77,7 +77,7 @@ namespace ProductCalculation.Library.Storage
                     dr,
                     dt.Columns["LaufNr"],
                     new List<DataColumn>() {
-                                dt.Columns["DateiName"],
+                                //dt.Columns["DateiName"],
                                 dt.Columns["Bezeichnung"],
                                 dt.Columns["Bemerkungen"]
                     },

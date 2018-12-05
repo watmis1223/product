@@ -30,6 +30,21 @@ namespace ProductCalculation
 
             _Args = arguments;
 
+            if (_Args != null && _Args.Length >= 2)
+            {
+                if (_Args[1].StartsWith("copy"))
+                {
+                    string app = _Args[0];
+                    string cmd = _Args[1];
+                    for (int i = 2; i < _Args.Length; i++)
+                    {
+                        cmd = String.Concat(cmd + " " + _Args[i]);
+                    }
+
+                    _Args = new string[] { app, cmd };                                     
+                }
+            }
+
             //_PriceModule
             //_PriceModule.Copy += _PriceModule_Copy;
             _PriceModule.Saved += _PriceModule_Saved;
@@ -49,6 +64,8 @@ namespace ProductCalculation
             _SettingModule.Dock = DockStyle.Fill;
 
             brBtnCopy.Enabled = false;
+            brBtnNew.Enabled = false;
+            brBtnSave.Enabled = false;
 
             CallByProffix(_Args);
         }
@@ -84,6 +101,8 @@ namespace ProductCalculation
 
             brBtnPriceSetting.Enabled = true;
             brBtnCopy.Enabled = false;
+            brBtnNew.Enabled = false;
+            brBtnSave.Enabled = false;
 
             bool isProffixLoad = false;
             if (_Args != null && _Args.Length >= 2)
@@ -92,10 +111,21 @@ namespace ProductCalculation
                 {
                     isProffixLoad = true;
 
-                    if (_Args[1].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).Length > 2)
+                    string[] sCmdParam = _Args[1].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+
+                    if (sCmdParam.Length > 2)
                     {
                         brBtnPriceSetting.Enabled = false;
                         brBtnCopy.Enabled = true;
+                        brBtnNew.Enabled = false;
+                        brBtnSave.Enabled = true;
+                    }
+                    else if (sCmdParam.Length == 2)
+                    {
+                        brBtnPriceSetting.Enabled = true;
+                        brBtnCopy.Enabled = false;
+                        brBtnNew.Enabled = true; ;
+                        brBtnSave.Enabled = false;
                     }
                 }
                 else if (_Args[1].StartsWith("copy"))
@@ -104,6 +134,8 @@ namespace ProductCalculation
 
                     brBtnPriceSetting.Enabled = false;
                     brBtnCopy.Enabled = false;
+                    brBtnNew.Enabled = false;
+                    brBtnSave.Enabled = true;
                 }
 
                 ShowModule(ApplicationModules.PriceModuleCalculationByProffix, new string[] { _Args[0], _Args[1] });
@@ -126,21 +158,44 @@ namespace ProductCalculation
             {
                 ShowModule(ApplicationModules.PriceModuleCalculation);
             }
+
+            brBtnNew.Enabled = true;
         }
 
         private void brBtnPriceSetting_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ShowModule(ApplicationModules.PriceModuleSetting);
+
+            brBtnCopy.Enabled = false;
+            brBtnNew.Enabled = false;
+            brBtnSave.Enabled = false;
         }
 
         private void brBtnCopy_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ShowModule(ApplicationModules.PriceModuleCopyCalculation);
+
+            brBtnCopy.Enabled = false;
+            brBtnNew.Enabled = false;
+            brBtnSave.Enabled = false;
+        }
+
+        private void brBtnNew_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            _PriceModule.NewCalculation();
+        }
+
+        private void brBtnSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            _PriceModule.SaveCalculation();
         }
 
         private void _PriceModule_OpenedCalculation()
         {
             brBtnPriceSetting.Enabled = false;
+            brBtnCopy.Enabled = false;
+            brBtnNew.Enabled = false;
+            brBtnSave.Enabled = true;
         }
 
         private void _PriceModule_Saved(string message)
@@ -161,7 +216,7 @@ namespace ProductCalculation
             if (!String.IsNullOrWhiteSpace(command) && (_Args != null && _Args.Length >= 2))
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = _Args[0];
+                startInfo.FileName = _Args[0];                
                 startInfo.Arguments = command;
                 Process.Start(startInfo);
             }

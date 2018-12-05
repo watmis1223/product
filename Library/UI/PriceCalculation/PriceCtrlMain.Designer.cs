@@ -33,7 +33,7 @@
             this.generalCtrl1 = new ProductCalculation.Library.UI.PriceCalculation.GeneralCtrl();
             this.calculationTabPage = new DevExpress.XtraTab.XtraTabPage();
             this.calculationBasicCtrl1 = new ProductCalculation.Library.UI.PriceCalculation.CalculationBasicCtrl();
-            ((System.ComponentModel.ISupportInitialize)(this.mainTabControl)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainTabControl)).BeginInit();            
             this.mainTabControl.SuspendLayout();
             this.generalTabPage.SuspendLayout();
             this.calculationTabPage.SuspendLayout();
@@ -97,7 +97,7 @@
             this.Name = "PriceCtrlMain";
             this.Size = new System.Drawing.Size(1532, 1142);
             this.Load += new System.EventHandler(this.PriceCtrlMain_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.mainTabControl)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainTabControl)).EndInit();            
             this.mainTabControl.ResumeLayout(false);
             this.generalTabPage.ResumeLayout(false);
             this.calculationTabPage.ResumeLayout(false);

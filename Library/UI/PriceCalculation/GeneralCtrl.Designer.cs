@@ -722,6 +722,7 @@
             this.layoutControlItem21.Size = new System.Drawing.Size(152, 48);
             this.layoutControlItem21.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem21.TextVisible = false;
+            this.layoutControlItem21.Visibility = DevExpress.XtraLayout.Utils.LayoutVisibility.Never;
             // 
             // layoutControlGroup7
             // 

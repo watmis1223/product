@@ -43,11 +43,8 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             this.txtScaleNumber = new DevExpress.XtraEditors.TextEdit();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.btnSave = new DevExpress.XtraEditors.SimpleButton();
             this.cboPriceScales = new DevExpress.XtraEditors.LookUpEdit();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
-            this.layoutControlItem15 = new DevExpress.XtraLayout.LayoutControlItem();
-            this.emptySpaceItem2 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlItem1 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem2 = new DevExpress.XtraLayout.LayoutControlItem();
             this.layoutControlItem3 = new DevExpress.XtraLayout.LayoutControlItem();
@@ -69,8 +66,6 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboPriceScales.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem15)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).BeginInit();
@@ -84,7 +79,6 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             this.layoutControl1.Controls.Add(this.gridControl2);
             this.layoutControl1.Controls.Add(this.txtScaleNumber);
             this.layoutControl1.Controls.Add(this.gridControl1);
-            this.layoutControl1.Controls.Add(this.btnSave);
             this.layoutControl1.Controls.Add(this.cboPriceScales);
             this.layoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl1.Location = new System.Drawing.Point(0, 0);
@@ -124,7 +118,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             this.repositoryItemButtonEdit1,
             this.myRepositoryItemButtonEdit1,
             this.myRepositoryItemButtonEdit2});
-            this.gridControl2.Size = new System.Drawing.Size(1506, 588);
+            this.gridControl2.Size = new System.Drawing.Size(1506, 636);
             this.gridControl2.TabIndex = 22;
             this.gridControl2.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView2});
@@ -205,7 +199,6 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph)});
             this.myRepositoryItemButtonEdit1.Name = "myRepositoryItemButtonEdit1";
             this.myRepositoryItemButtonEdit1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
-            this.myRepositoryItemButtonEdit1.ButtonClick += MyRepositoryItemButtonEdit1_ButtonClick;
             // 
             // myRepositoryItemButtonEdit2
             // 
@@ -214,7 +207,6 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph)});
             this.myRepositoryItemButtonEdit2.Name = "myRepositoryItemButtonEdit2";
             this.myRepositoryItemButtonEdit2.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
-            this.myRepositoryItemButtonEdit2.ButtonClick += MyRepositoryItemButtonEdit2_ButtonClick;
             // 
             // txtScaleNumber
             // 
@@ -279,18 +271,6 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             this.gridView1.CellValueChanged += new DevExpress.XtraGrid.Views.Base.CellValueChangedEventHandler(this.gridView1_CellValueChanged);
             this.gridView1.ValidatingEditor += new DevExpress.XtraEditors.Controls.BaseContainerValidateEditorEventHandler(this.gridView1_ValidatingEditor);
             // 
-            // btnSave
-            // 
-            this.btnSave.Location = new System.Drawing.Point(1345, 1085);
-            this.btnSave.Margin = new System.Windows.Forms.Padding(6);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(174, 44);
-            this.btnSave.StyleController = this.layoutControl1;
-            this.btnSave.TabIndex = 18;
-            this.btnSave.TabStop = false;
-            this.btnSave.Text = "Speichern";
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
             // cboPriceScales
             // 
             this.cboPriceScales.EditValue = "dropDownButton1";
@@ -313,8 +293,6 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             // 
             this.layoutControlGroup1.EnableIndentsWithoutBorders = DevExpress.Utils.DefaultBoolean.True;
             this.layoutControlGroup1.Items.AddRange(new DevExpress.XtraLayout.BaseLayoutItem[] {
-            this.layoutControlItem15,
-            this.emptySpaceItem2,
             this.layoutControlItem1,
             this.layoutControlItem2,
             this.layoutControlItem3,
@@ -323,26 +301,6 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             this.layoutControlGroup1.Name = "Root";
             this.layoutControlGroup1.Size = new System.Drawing.Size(1532, 1142);
             this.layoutControlGroup1.TextVisible = false;
-            // 
-            // layoutControlItem15
-            // 
-            this.layoutControlItem15.Control = this.btnSave;
-            this.layoutControlItem15.Location = new System.Drawing.Point(1332, 1072);
-            this.layoutControlItem15.Name = "layoutControlItem15";
-            this.layoutControlItem15.Size = new System.Drawing.Size(178, 48);
-            this.layoutControlItem15.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.SupportHorzAlignment;
-            this.layoutControlItem15.TextSize = new System.Drawing.Size(0, 0);
-            this.layoutControlItem15.TextVisible = false;
-            // 
-            // emptySpaceItem2
-            // 
-            this.emptySpaceItem2.AllowHotTrack = false;
-            this.emptySpaceItem2.Location = new System.Drawing.Point(0, 1072);
-            this.emptySpaceItem2.MinSize = new System.Drawing.Size(104, 24);
-            this.emptySpaceItem2.Name = "emptySpaceItem2";
-            this.emptySpaceItem2.Size = new System.Drawing.Size(1332, 48);
-            this.emptySpaceItem2.SizeConstraintsType = DevExpress.XtraLayout.SizeConstraintsType.Custom;
-            this.emptySpaceItem2.TextSize = new System.Drawing.Size(0, 0);
             // 
             // layoutControlItem1
             // 
@@ -382,7 +340,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             this.layoutControlItem4.Control = this.gridControl2;
             this.layoutControlItem4.Location = new System.Drawing.Point(0, 480);
             this.layoutControlItem4.Name = "layoutControlItem4";
-            this.layoutControlItem4.Size = new System.Drawing.Size(1510, 592);
+            this.layoutControlItem4.Size = new System.Drawing.Size(1510, 640);
             this.layoutControlItem4.TextSize = new System.Drawing.Size(0, 0);
             this.layoutControlItem4.TextVisible = false;
             // 
@@ -423,8 +381,6 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cboPriceScales.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem15)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem3)).EndInit();
@@ -438,9 +394,6 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 
         private DevExpress.XtraLayout.LayoutControl layoutControl1;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup1;
-        private DevExpress.XtraEditors.SimpleButton btnSave;
-        private DevExpress.XtraLayout.LayoutControlItem layoutControlItem15;
-        private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem2;
         private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;

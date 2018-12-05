@@ -127,7 +127,17 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                 }
 
                 //load proffix product document
-                ProffixLAGDokumente oProffixLAGDokumente = StorageOperator.GetProffixLAGDokumente(model.LAGDokumenteArtikelNrLAG, model.CalculationID.ToString(), connectionString);
+                ProffixLAGDokumente oProffixLAGDokumente = null;
+                if (model.LAGDokumenteLaufNr > 0)
+                {
+                    oProffixLAGDokumente = StorageOperator.GetLAG_DokumenteByID(model.LAGDokumenteLaufNr, connectionString);
+                }
+                else
+                {
+                    oProffixLAGDokumente = StorageOperator.GetProffixLAGDokumente(
+                        model.LAGDokumenteArtikelNrLAG, model.CalculationID.ToString(), connectionString);
+                }
+
                 if (oProffixLAGDokumente != null)
                 {
                     txtRemark.Text = oProffixLAGDokumente.Bemerkungen;
@@ -155,7 +165,17 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                 ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = "-", Value = 0 });
 
                 //load proffix address document
-                ProffixADRDokumente oProffixADRDokumente = StorageOperator.GetProffixADRDokumente(model.ADRDokumenteDokumentNrADR, model.CalculationID.ToString(), connectionString);
+                ProffixADRDokumente oProffixADRDokumente = null;
+                if (model.ADRDokumenteLaufNr > 0)
+                {
+                    oProffixADRDokumente = StorageOperator.GetADR_DokumenteByID(model.ADRDokumenteLaufNr, connectionString);
+                }
+                else
+                {
+                    oProffixADRDokumente = StorageOperator.GetProffixADRDokumente(
+                        model.ADRDokumenteDokumentNrADR, model.CalculationID.ToString(), connectionString);
+                }
+
                 if (oProffixADRDokumente != null)
                 {
                     txtRemark.Text = oProffixADRDokumente.Bemerkungen;
@@ -351,6 +371,63 @@ namespace ProductCalculation.Library.UI.PriceCalculation
         private void Ctrl_Load(object sender, EventArgs e)
         {
 
+        }
+
+        public void NewCalculation()
+        {
+            btnNew_Click(null, null);
+        }
+
+        public void UpdateModel()
+        {
+            //if proffix load, model is null
+            if (_Model == null)
+            {
+                _Model = new GeneralSettingModel();
+            }
+
+            if (_Model != null)
+            {
+                _Model.Remark = txtRemark.Text;
+                _Model.Supplier = ddSupplier.SelectedItem.ToString();
+                _Model.Employee = txtEmployee.Text;
+                _Model.Info = txtInfo.Text;
+                _Model.CreateDate = dtCreate.DateTime.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
+
+                _Model.Convert = new GeneralConvert()
+                {
+                    Mode = rdoUnitList.EditValue.ToString(),
+                    SaleUnit = txtSaleUnit.Text,
+                    ShopUnit = txtShopUnit.Text,
+                    UnitNumber = Convert.ToDecimal(txtUnitNumber.Text)
+                };
+                _Model.Currency = new GeneralCurrency()
+                {
+                    Mode = rdoCurrencyList.EditValue.ToString(),
+                    Currency = rdoCurrencyList.EditValue.ToString() == "A" ? "CHF" : txtConvertCurrency.Text,
+                    Rate = Convert.ToDecimal(txtExchangeRate.Text)
+                };
+                _Model.Options = getSelectedOption();
+                _Model.ProductDesc = getProductDesc();
+
+                try
+                {
+                    _Model.Convert.EEUnitNumber = Convert.ToDecimal(new string(_Model.Convert.ShopUnit.Where(item => Char.IsDigit(item)).ToArray()));
+                }
+                catch
+                {
+                    _Model.Convert.EEUnitNumber = 1;
+                }
+
+                try
+                {
+                    _Model.Convert.VEUnitNumber = Convert.ToDecimal(new string(_Model.Convert.SaleUnit.Where(item => Char.IsDigit(item)).ToArray()));
+                }
+                catch
+                {
+                    _Model.Convert.EEUnitNumber = 1;
+                }
+            }
         }
 
         private void btnNew_Click(object sender, EventArgs e)
