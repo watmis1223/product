@@ -71,7 +71,7 @@ namespace ProductCalculation.Library.Storage
 
                     if (exceptSaveColumns.Where(item => item.ColumnName == dc.ColumnName).FirstOrDefault() != null)
                     {
-                        isExceptColumn = true;                        
+                        isExceptColumn = true;
                     }
 
                     //foreach (DataColumn exceptDc in exceptSaveColumns)
@@ -279,13 +279,13 @@ namespace ProductCalculation.Library.Storage
                 queryValues.Append(" values(");
                 foreach (DataColumn dc in saveColumns)
                 {
-                    if (dc.ColumnName == primaryKey.ColumnName)
+                    if (primaryKey != null && dc.ColumnName == primaryKey.ColumnName)
                     {
                         queryValues.AppendFormat("(select max({0}) + 1 from {1} )  ,", dc.ColumnName, dr.Table.TableName);
                     }
                     else
                     {
-                        if (customDataColumns != null && 
+                        if (customDataColumns != null &&
                             customDataColumns.Where(item => item.ColumnName == dc.ColumnName).FirstOrDefault() != null)
                         {
                             queryValues.AppendFormat("{0},", dr[dc.ColumnName]);

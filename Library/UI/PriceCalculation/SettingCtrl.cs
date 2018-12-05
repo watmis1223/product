@@ -17,8 +17,8 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 {
     public partial class SettingCtrl : DevExpress.XtraEditors.XtraUserControl
     {
-        public delegate void SettingSaveChangedCallback();
-        public event SettingSaveChangedCallback SettingSaveChanged;
+        public delegate void SaveChangedCallback(string mesage);
+        public event SaveChangedCallback SaveChanged;
 
         PriceCalculationSetting _Setting;
 
@@ -85,12 +85,21 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SetValues();
-            ApplicationOperator.SavePriceCalculationSetting(_Setting);
+            string sMessage = "Saved";
 
-            if (SettingSaveChanged != null)
+            try
             {
-                SettingSaveChanged();
+                SetValues();
+                ApplicationOperator.SavePriceCalculationSetting(_Setting);
+            }
+            catch (Exception ex)
+            {
+                sMessage = ex.Message;
+            }           
+
+            if (SaveChanged != null)
+            {
+                SaveChanged(sMessage);
             }
         }
     }

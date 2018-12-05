@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,31 @@ namespace ProductCalculation.Library.Storage
 {
     static partial class StorageOperator
     {
+        public static int GetDocumentNumber(string documentTableName, string connectionString)
+        {
+            int iNumber = 0;
+            
+            StringBuilder queryValues = new StringBuilder();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                ///building columns
+                queryValues.Append("update [LaufNummern] ");
+                queryValues.AppendFormat("set [LaufNr] = [LaufNr] +1 ");
+                queryValues.AppendFormat("where [Tabelle] = '{0}';", documentTableName);                
+                queryValues.AppendFormat(" SELECT LaufNr from [LaufNummern] where [Tabelle] = '{0}';", documentTableName);
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+                connection.Open();
+                cmd.CommandText = queryValues.ToString();
+                iNumber = Convert.ToInt32(cmd.ExecuteScalar());
+                connection.Close();
+                cmd.Dispose();
+            }
+
+            return iNumber;
+        }
         public static ProffixLAGArtikelModel GetProffixLAGArtikelModel(string artikelNrLAG, string connectionString)
         {
             ProffixLAGArtikelModel model = null;

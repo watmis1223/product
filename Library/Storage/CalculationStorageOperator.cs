@@ -77,7 +77,7 @@ namespace ProductCalculation.Library.Storage
             return model;
         }
 
-        public static void SaveModel(CalculationModel model)
+        public static void SaveCalculationModel(CalculationModel model)
         {
             try
             {
@@ -106,7 +106,6 @@ namespace ProductCalculation.Library.Storage
                     //insert new row first to get id
                     dr["JsonData1"] = "NEW";
                     model.ID = InsertRowReturnIdentity(dt.Rows[0], dt.Columns["PriceID"], oIgnoreSave.ToArray());
-
                 }
 
                 model.CalculaionDateTime = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
@@ -139,6 +138,9 @@ namespace ProductCalculation.Library.Storage
 
                 //save proffix if needed
                 SaveProffix(model);
+
+                //after save succes
+                model.ProffixModel.Command = Global.Commands.Open;
             }
             catch (Exception ex)
             {
@@ -152,7 +154,6 @@ namespace ProductCalculation.Library.Storage
             {
                 return;
             }
-
 
             //1. save LAG_Dokumente or ADR_Dokumente
             if (!String.IsNullOrWhiteSpace(model.ProffixModel.LAGDokumenteArtikelNrLAG))

@@ -30,27 +30,13 @@
         {
             this.mainTabControl = new DevExpress.XtraTab.XtraTabControl();
             this.generalTabPage = new DevExpress.XtraTab.XtraTabPage();
-            this.splitContainerControl1 = new DevExpress.XtraEditors.SplitContainerControl();
-            this.lstCalculation = new DevExpress.XtraEditors.ListBoxControl();
             this.generalCtrl1 = new ProductCalculation.Library.UI.PriceCalculation.GeneralCtrl();
-            this.settingTabPage = new DevExpress.XtraTab.XtraTabPage();
-            this.settingCtrl1 = new ProductCalculation.Library.UI.PriceCalculation.SettingCtrl();
             this.calculationTabPage = new DevExpress.XtraTab.XtraTabPage();
             this.calculationBasicCtrl1 = new ProductCalculation.Library.UI.PriceCalculation.CalculationBasicCtrl();
-            this.copyCalculationTabPage = new DevExpress.XtraTab.XtraTabPage();
-            this.calculationCopyCtrl1 = new ProductCalculation.Library.UI.PriceCalculation.CalculationCopyCtrl();
-            this.bar3 = new DevExpress.XtraBars.Bar();
-            this.bar2 = new DevExpress.XtraBars.Bar();
-            this.bar1 = new DevExpress.XtraBars.Bar();
             ((System.ComponentModel.ISupportInitialize)(this.mainTabControl)).BeginInit();
             this.mainTabControl.SuspendLayout();
             this.generalTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).BeginInit();
-            this.splitContainerControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.lstCalculation)).BeginInit();
-            this.settingTabPage.SuspendLayout();
             this.calculationTabPage.SuspendLayout();
-            this.copyCalculationTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTabControl
@@ -62,43 +48,16 @@
             this.mainTabControl.Size = new System.Drawing.Size(1532, 1142);
             this.mainTabControl.TabIndex = 0;
             this.mainTabControl.TabPages.AddRange(new DevExpress.XtraTab.XtraTabPage[] {
-            this.settingTabPage,
             this.generalTabPage,
-            this.calculationTabPage,
-            this.copyCalculationTabPage});
-            this.mainTabControl.CloseButtonClick += new System.EventHandler(this.mainTabControl_CloseButtonClick);
+            this.calculationTabPage});
             // 
             // generalTabPage
             // 
-            this.generalTabPage.Controls.Add(this.splitContainerControl1);
+            this.generalTabPage.Controls.Add(this.generalCtrl1);
             this.generalTabPage.Margin = new System.Windows.Forms.Padding(6);
             this.generalTabPage.Name = "generalTabPage";
             this.generalTabPage.Size = new System.Drawing.Size(1520, 1087);
             this.generalTabPage.Text = "Allgemein";
-            // 
-            // splitContainerControl1
-            // 
-            this.splitContainerControl1.Collapsed = true;
-            this.splitContainerControl1.CollapsePanel = DevExpress.XtraEditors.SplitCollapsePanel.Panel1;
-            this.splitContainerControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainerControl1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainerControl1.Name = "splitContainerControl1";
-            this.splitContainerControl1.Panel1.Controls.Add(this.lstCalculation);
-            this.splitContainerControl1.Panel1.Text = "Panel1";
-            this.splitContainerControl1.Panel2.Controls.Add(this.generalCtrl1);
-            this.splitContainerControl1.Panel2.Text = "Panel2";
-            this.splitContainerControl1.Size = new System.Drawing.Size(1520, 1087);
-            this.splitContainerControl1.SplitterPosition = 378;
-            this.splitContainerControl1.TabIndex = 1;
-            this.splitContainerControl1.Text = "splitContainerControl1";
-            // 
-            // lstCalculation
-            // 
-            this.lstCalculation.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstCalculation.Location = new System.Drawing.Point(0, 0);
-            this.lstCalculation.Name = "lstCalculation";
-            this.lstCalculation.Size = new System.Drawing.Size(0, 0);
-            this.lstCalculation.TabIndex = 0;
             // 
             // generalCtrl1
             // 
@@ -106,26 +65,9 @@
             this.generalCtrl1.Location = new System.Drawing.Point(0, 0);
             this.generalCtrl1.Margin = new System.Windows.Forms.Padding(6);
             this.generalCtrl1.Name = "generalCtrl1";
-            this.generalCtrl1.Size = new System.Drawing.Size(1510, 1087);
+            this.generalCtrl1.Size = new System.Drawing.Size(1520, 1087);
             this.generalCtrl1.TabIndex = 0;
             this.generalCtrl1.NewButtonClick += new ProductCalculation.Library.UI.PriceCalculation.GeneralCtrl.NewButtonClickCallback(this.generalCtrl1_NewButtonClick);
-            // 
-            // settingTabPage
-            // 
-            this.settingTabPage.Controls.Add(this.settingCtrl1);
-            this.settingTabPage.Margin = new System.Windows.Forms.Padding(6);
-            this.settingTabPage.Name = "settingTabPage";
-            this.settingTabPage.Size = new System.Drawing.Size(1520, 1087);
-            this.settingTabPage.Text = "Einstellungen";
-            // 
-            // settingCtrl1
-            // 
-            this.settingCtrl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingCtrl1.Location = new System.Drawing.Point(0, 0);
-            this.settingCtrl1.Margin = new System.Windows.Forms.Padding(6);
-            this.settingCtrl1.Name = "settingCtrl1";
-            this.settingCtrl1.Size = new System.Drawing.Size(1520, 1087);
-            this.settingCtrl1.TabIndex = 0;
             // 
             // calculationTabPage
             // 
@@ -144,45 +86,7 @@
             this.calculationBasicCtrl1.Name = "calculationBasicCtrl1";
             this.calculationBasicCtrl1.Size = new System.Drawing.Size(1520, 1087);
             this.calculationBasicCtrl1.TabIndex = 0;
-            this.calculationBasicCtrl1.SaveChanged += new ProductCalculation.Library.UI.PriceCalculation.CalculationBasicCtrl.SaveChangedCallback(this.calculationBasicCtrl1_SaveChanged);
-            // 
-            // copyCalculationTabPage
-            // 
-            this.copyCalculationTabPage.Controls.Add(this.calculationCopyCtrl1);
-            this.copyCalculationTabPage.Name = "copyCalculationTabPage";
-            this.copyCalculationTabPage.Size = new System.Drawing.Size(1520, 1087);
-            this.copyCalculationTabPage.Text = "CopyTo";
-            // 
-            // calculationCopyCtrl1
-            // 
-            this.calculationCopyCtrl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.calculationCopyCtrl1.Location = new System.Drawing.Point(0, 0);
-            this.calculationCopyCtrl1.Margin = new System.Windows.Forms.Padding(6);
-            this.calculationCopyCtrl1.Name = "calculationCopyCtrl1";
-            this.calculationCopyCtrl1.Size = new System.Drawing.Size(1520, 1087);
-            this.calculationCopyCtrl1.TabIndex = 0;
-            this.calculationCopyCtrl1.SaveChanged += new ProductCalculation.Library.UI.PriceCalculation.CalculationCopyCtrl.CopyCalculationSaveChangedCallback(this.calculationCopyCtrl1_SaveChanged);
-            // 
-            // bar3
-            // 
-            this.bar3.BarName = "Status bar";
-            this.bar3.DockCol = 0;
-            this.bar3.DockStyle = DevExpress.XtraBars.BarDockStyle.Bottom;
-            this.bar3.Text = "Status bar";
-            // 
-            // bar2
-            // 
-            this.bar2.BarName = "Main menu";
-            this.bar2.DockCol = 0;
-            this.bar2.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
-            this.bar2.Text = "Main menu";
-            // 
-            // bar1
-            // 
-            this.bar1.BarName = "Tools";
-            this.bar1.DockCol = 0;
-            this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
-            this.bar1.Text = "Tools";
+            this.calculationBasicCtrl1.SaveChanged += CalculationBasicCtrl1_SaveChanged;
             // 
             // PriceCtrlMain
             // 
@@ -196,12 +100,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.mainTabControl)).EndInit();
             this.mainTabControl.ResumeLayout(false);
             this.generalTabPage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainerControl1)).EndInit();
-            this.splitContainerControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.lstCalculation)).EndInit();
-            this.settingTabPage.ResumeLayout(false);
             this.calculationTabPage.ResumeLayout(false);
-            this.copyCalculationTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -209,18 +108,9 @@
         #endregion
 
         private DevExpress.XtraTab.XtraTabControl mainTabControl;
-        private DevExpress.XtraTab.XtraTabPage settingTabPage;
         private DevExpress.XtraTab.XtraTabPage calculationTabPage;
         private DevExpress.XtraTab.XtraTabPage generalTabPage;
-        private SettingCtrl settingCtrl1;
         private GeneralCtrl generalCtrl1;
-        private CalculationBasicCtrl calculationBasicCtrl1;
-        private DevExpress.XtraBars.Bar bar3;
-        private DevExpress.XtraBars.Bar bar2;
-        private DevExpress.XtraBars.Bar bar1;
-        private DevExpress.XtraEditors.SplitContainerControl splitContainerControl1;
-        private DevExpress.XtraEditors.ListBoxControl lstCalculation;
-        private DevExpress.XtraTab.XtraTabPage copyCalculationTabPage;
-        private CalculationCopyCtrl calculationCopyCtrl1;
+        private CalculationBasicCtrl calculationBasicCtrl1;        
     }
 }

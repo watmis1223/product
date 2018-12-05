@@ -233,7 +233,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             string sMessage = "Die Speicherung ist abgeschlossen.";
             try
             {
-                StorageOperator.SaveModel(_Model);
+                StorageOperator.SaveCalculationModel(_Model);
             }
             catch (Exception ex)
             {

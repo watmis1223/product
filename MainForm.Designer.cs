@@ -28,20 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {            
-            this.components = new System.ComponentModel.Container();
             this.ribbonControl1 = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.brBrnPrice = new DevExpress.XtraBars.BarButtonItem();
-            this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
-            this.brBtnPriceCalculation = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnPriceSetting = new DevExpress.XtraBars.BarButtonItem();
-            this.brBtnOil = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnCopy = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.pnlMain = new DevExpress.XtraEditors.PanelControl();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlMain)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,8 +45,6 @@
             this.ribbonControl1.Items.AddRange(new DevExpress.XtraBars.BarItem[] {
             this.ribbonControl1.ExpandCollapseItem,
             this.brBrnPrice,
-            this.brBtnOil,
-            this.brBtnPriceCalculation,
             this.brBtnPriceSetting,
             this.brBtnCopy});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
@@ -65,46 +57,23 @@
             // 
             // brBrnPrice
             // 
-            this.brBrnPrice.ActAsDropDown = true;
-            this.brBrnPrice.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.DropDown;
-            this.brBrnPrice.Caption = "Product";
-            this.brBrnPrice.DropDownControl = this.popupMenu1;
+            this.brBrnPrice.Caption = "Calculation";
             this.brBrnPrice.Id = 4;
             this.brBrnPrice.ImageOptions.Image = global::ProductCalculation.Properties.Resources.tag_16x16;
             this.brBrnPrice.ImageOptions.LargeImage = global::ProductCalculation.Properties.Resources.tag_32x32;
             this.brBrnPrice.Name = "brBrnPrice";
             this.brBrnPrice.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            // 
-            // popupMenu1
-            // 
-            this.popupMenu1.ItemLinks.Add(this.brBtnPriceCalculation);
-            this.popupMenu1.ItemLinks.Add(this.brBtnPriceSetting);
-            this.popupMenu1.Name = "popupMenu1";
-            this.popupMenu1.Ribbon = this.ribbonControl1;
-            // 
-            // brBtnPriceCalculation
-            // 
-            this.brBtnPriceCalculation.Caption = "Calculation";
-            this.brBtnPriceCalculation.Id = 8;
-            this.brBtnPriceCalculation.Name = "brBtnPriceCalculation";
-            this.brBtnPriceCalculation.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnPriceCalculation_ItemClick);
+            this.brBrnPrice.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBrnPrice_ItemClick);
             // 
             // brBtnPriceSetting
             // 
             this.brBtnPriceSetting.Caption = "Settings";
             this.brBtnPriceSetting.Id = 9;
+            this.brBtnPriceSetting.ImageOptions.Image = global::ProductCalculation.Properties.Resources.technology_16x16;
+            this.brBtnPriceSetting.ImageOptions.LargeImage = global::ProductCalculation.Properties.Resources.technology_32x32;
             this.brBtnPriceSetting.Name = "brBtnPriceSetting";
+            this.brBtnPriceSetting.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             this.brBtnPriceSetting.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnPriceSetting_ItemClick);
-            // 
-            // brBtnOil
-            // 
-            this.brBtnOil.Caption = "Oil";
-            this.brBtnOil.Id = 7;
-            this.brBtnOil.ImageOptions.Image = global::ProductCalculation.Properties.Resources.database_16x161;
-            this.brBtnOil.ImageOptions.LargeImage = global::ProductCalculation.Properties.Resources.database_32x321;
-            this.brBtnOil.Name = "brBtnOil";
-            this.brBtnOil.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
-            this.brBtnOil.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnOil_ItemClick);
             // 
             // brBtnCopy
             // 
@@ -119,20 +88,16 @@
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
-            this.ribbonPageGroup1,
-            this.ribbonPageGroup2});
+            this.ribbonPageGroup1});
             this.ribbonPage1.Name = "ribbonPage1";
             this.ribbonPage1.Text = "Module";
             // 
             // ribbonPageGroup1
             // 
             this.ribbonPageGroup1.ItemLinks.Add(this.brBrnPrice);
+            this.ribbonPageGroup1.ItemLinks.Add(this.brBtnCopy);
+            this.ribbonPageGroup1.ItemLinks.Add(this.brBtnPriceSetting);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
-            // 
-            // ribbonPageGroup2
-            // 
-            this.ribbonPageGroup2.ItemLinks.Add(this.brBtnCopy);
-            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
             // 
             // pnlMain
             // 
@@ -160,7 +125,6 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlMain)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -172,12 +136,8 @@
         private DevExpress.XtraBars.Ribbon.RibbonPage ribbonPage1;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup1;
         private DevExpress.XtraBars.BarButtonItem brBrnPrice;
-        private DevExpress.XtraBars.PopupMenu popupMenu1;
-        private DevExpress.XtraBars.BarButtonItem brBtnOil;        
-        private DevExpress.XtraBars.BarButtonItem brBtnPriceCalculation;
         private DevExpress.XtraBars.BarButtonItem brBtnPriceSetting;
         private DevExpress.XtraEditors.PanelControl pnlMain;
         private DevExpress.XtraBars.BarButtonItem brBtnCopy;
-        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
     }
 }

@@ -28,21 +28,34 @@ namespace ProductCalculation.Library.Storage
 
         static void UpdateLAG_Dokumente(CalculationModel model)
         {
+            if (model == null)
+            {
+                return;
+            }
+
+            if (model.ProffixModel == null)
+            {
+                return;
+            }
+
             //save or update
             //string sCalculationID = model.ProffixModel.IsNew ? null : model.ID.ToString();
             //string sCalculationID = model.ID == 0 ? null : model.ID.ToString();
             //string sCalculationID = model.ProffixModel.IsNew ? null : model.ID.ToString();
-            ProffixLAGDokumente oDokumente = GetProffixLAGDokumente(
-                model.ProffixModel.LAGDokumenteArtikelNrLAG, model.ID.ToString(), model.ProffixConnection);
+            //ProffixLAGDokumente oDokumente = GetProffixLAGDokumente(
+            //    model.ProffixModel.LAGDokumenteArtikelNrLAG, model.ID.ToString(), model.ProffixConnection);
+
+            ProffixLAGDokumente oDokumente = GetLAG_DokumenteByID(model.ProffixModel.LAGDokumenteLaufNr, model.ProffixConnection);
 
             if (oDokumente != null)
             {
                 //update value 
                 DataTable dt = new DataTable();
                 dt.TableName = _LAG_Dokumente;
-                dt.Columns.Add(new DataColumn("LaufNr", typeof(string)));
+                dt.Columns.Add(new DataColumn("LaufNr", typeof(Int32)));
                 dt.Columns.Add(new DataColumn("DateiName", typeof(string)));
                 dt.Columns.Add(new DataColumn("Bezeichnung", typeof(string)));
+                dt.Columns.Add(new DataColumn("Bemerkungen", typeof(string)));
                 DataRow dr = dt.NewRow();
                 dt.Rows.Add(dr);
 
@@ -57,6 +70,7 @@ namespace ProductCalculation.Library.Storage
                     model.GeneralSetting.Options.Contains("A") ? " Aktiv" : " ",
                     model.GeneralSetting.Supplier);
                 dr["Bezeichnung"] = sBezeichnung.Length > 100 ? sBezeichnung.Substring(0, 100) : sBezeichnung;
+                dr["Bemerkungen"] = model.GeneralSetting.Remark;
 
                 //update proffix
                 UpdateRow(
@@ -64,7 +78,8 @@ namespace ProductCalculation.Library.Storage
                     dt.Columns["LaufNr"],
                     new List<DataColumn>() {
                                 dt.Columns["DateiName"],
-                                dt.Columns["Bezeichnung"]
+                                dt.Columns["Bezeichnung"],
+                                dt.Columns["Bemerkungen"]
                     },
                     connectionString: model.ProffixConnection);
             }
@@ -77,11 +92,16 @@ namespace ProductCalculation.Library.Storage
                 return;
             }
 
+            if (model.ProffixModel == null)
+            {
+                return;
+            }
+
             CultureInfo oCulture = new CultureInfo("en-US");
             DateTime oNow = DateTime.Now;
-
-            //insert new document
-            string sCalculationID = model.ID.ToString();
+            
+            //get running no.
+            model.ProffixModel.LAGDokumenteLaufNr = GetDocumentNumber(_LAG_Dokumente, model.ProffixConnection);
 
             DataTable dt = new DataTable();
             dt.TableName = _LAG_Dokumente;
@@ -105,7 +125,7 @@ namespace ProductCalculation.Library.Storage
 
             DataRow dr = dt.NewRow();
             dt.Rows.Add(dr);
-            dr["LaufNr"] = 0;
+            dr["LaufNr"] = model.ProffixModel.LAGDokumenteLaufNr;
             dr["ArtikelNrLAG"] = model.ProffixModel.LAGDokumenteArtikelNrLAG;
             dr["Bemerkungen"] = model.GeneralSetting.Remark;
 
@@ -121,7 +141,7 @@ namespace ProductCalculation.Library.Storage
             dr["DateiName"] = String.Format("open {0} {1}", model.ProffixModel.LAGDokumenteArtikelNrLAG, model.ID);
             dr["Datum"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
             dr["DokGruppe"] = "Kalkulationen";
-            dr["DokumentNrLAG"] = String.Format("(select max([LaufNr]) + 1 from {0})", _LAG_Dokumente);
+            dr["DokumentNrLAG"] = dr["LaufNr"]; //String.Format("(select max([LaufNr]) + 1 from {0})", _LAG_Dokumente);
             //dr["Drucken"] = DBNull.Value;
             dr["Modul"] = model.ProffixModel.AppPath;
             dr["ImportNr"] = 0;
@@ -132,7 +152,44 @@ namespace ProductCalculation.Library.Storage
             dr["Geaendert"] = 0;
             dr["Exportiert"] = 0;
 
-            InsertRowManualIncreaseID(dr, dt.Columns["LaufNr"], null, new DataColumn[] { dt.Columns["DokumentNrLAG"] }, model.ProffixConnection);            
+            InsertRowManualIncreaseID(dr, null, null, null, model.ProffixConnection);            
+        }
+
+        public static ProffixLAGDokumente GetLAG_DokumenteByID(int documentID, string connectionString)
+        {
+            ProffixLAGDokumente model = null;
+
+            if (String.IsNullOrWhiteSpace(connectionString))
+            {
+                return null;
+            }
+
+            DataColumn[] oSelect = {
+                new DataColumn("LaufNr", typeof(Int32)),
+                //new DataColumn("ArtikelNrLAG", typeof(string)),
+                new DataColumn("Bemerkungen", typeof(string)),
+                new DataColumn("DateiName", typeof(DateTime))
+            };
+
+            DataColumn[] oCondition = new DataColumn[1];
+            DataColumn col = new DataColumn("LaufNr", typeof(Int32));
+            col.DefaultValue = documentID;
+            oCondition[0] = col;
+
+            DataTable dt = LoadTable(_LAG_Dokumente, oSelect, oCondition, null, connectionString: connectionString);
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                model = new ProffixLAGDokumente()
+                {
+                    LaufNr = Convert.ToInt32(dt.Rows[0]["LaufNr"]),
+                    //ArtikelNrLAG = dt.Rows[0]["ArtikelNrLAG"].ToString(),
+                    Bemerkungen = dt.Rows[0]["Bemerkungen"].ToString(),
+                    DateiName = dt.Rows[0]["DateiName"].ToString()
+                };
+            }
+
+            return model;
         }
     }
 }
