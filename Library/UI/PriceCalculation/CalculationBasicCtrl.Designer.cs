@@ -224,6 +224,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             this.txtScaleNumber.Size = new System.Drawing.Size(145, 40);
             this.txtScaleNumber.StyleController = this.layoutControl1;
             this.txtScaleNumber.TabIndex = 21;
+            this.txtScaleNumber.EditValueChanged += TxtScaleNumber_EditValueChanged;
             // 
             // gridControl1
             // 
