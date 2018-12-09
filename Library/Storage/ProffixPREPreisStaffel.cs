@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -11,11 +12,34 @@ namespace ProductCalculation.Library.Storage
 {
     static partial class StorageOperator
     {
+        static string _PRE_PreisStaffel = "PRE_PreisStaffel";
+
         static void SavePRE_PreisStaffel(CalculationModel model)
         {
+            if (model == null)
+            {
+                return;
+            }
+
+            if (model.ProffixModel == null)
+            {
+                return;
+            }
+
+            if (model.CalculationNotes == null)
+            {
+                return;
+            }
+
+            //for scale, notes should more than 2
+            if (model.CalculationNotes.Count == 2)
+            {
+                return;
+            }
+
             //update value 
             DataTable dt = new DataTable();
-            dt.TableName = "PRE_PreisStaffel";
+            dt.TableName = _PRE_PreisStaffel;
             DataColumn[] cols = {
                 new DataColumn("LaufNr", typeof(Int32)), //id
                 new DataColumn("ANummer", typeof(string)), //artikel
@@ -36,9 +60,11 @@ namespace ProductCalculation.Library.Storage
                 
                 new DataColumn("ImportNr", typeof(Int32)), //0
 
-                new DataColumn("ErstelltAm", typeof(DateTime)),
+                new DataColumn("ErstelltAm", typeof(string)),
+                //new DataColumn("ErstelltAm", typeof(DateTime)),
                 new DataColumn("ErstelltVon", typeof(string)), //cs
-                new DataColumn("GeaendertAm", typeof(DateTime)),
+                new DataColumn("GeaendertAm", typeof(string)),
+                //new DataColumn("GeaendertAm", typeof(DateTime)),
                 new DataColumn("GeaendertVon", typeof(string)), //cs
 
                 new DataColumn("Geaendert", typeof(Int16)), //1
@@ -46,92 +72,74 @@ namespace ProductCalculation.Library.Storage
             };
             dt.Columns.AddRange(cols);
 
-           
-            //value columns
-            List<DataColumn> valueCols = new List<DataColumn>();
 
+            string sNow = DateTime.Now.ToString("yyyy-MM-dd 00:00:00.000", new CultureInfo("en-US"));
 
-            //PRE_PreisStaffel            
-            List<ProffixPREPreisStaffelModel> oList = GetProffixPREPreisStaffelModelList(model.ProffixModel.LAGDokumenteArtikelNrLAG, model.ProffixConnection);
+            //basic note
+            CalculationNoteModel basicNote = model.CalculationNotes.Where(item => item.ID == 0).FirstOrDefault();
+            List<CalculationNoteModel> scaleNotes = model.CalculationNotes.Where(item => item.ID > 0).ToList();
 
-            //clear existing            
-            if (oList != null && oList.Count > 0)
+            foreach (CalculationNoteModel note in scaleNotes)
             {
-                //overwrite amount
-                //scale calculation note id start from 1
-                foreach (CalculationNoteModel note in model.CalculationNotes)
+                DataRow dr = dt.NewRow();
+                dt.Rows.Add(dr);
+
+                CalculationItemModel oCal = note.CalculationItems.Where(item => item.Tag == "VK(liste)").FirstOrDefault();
+
+                dr["LaufNr"] = GetDocumentNumber(_PRE_PreisStaffel, model.ProffixConnection); //new row
+                dr["ANummer"] = model.ProffixModel.LAGDokumenteArtikelNrLAG;
+                dr["ArtikelTyp"] = 1;
+                dr["AssortiertPRE"] = 0;
+
+                dr["KNummer"] = 0;
+                dr["KundenTyp"] = 0;
+
+                dr["MengeVon"] = note.Quantity;
+                dr["PreisTypPRE"] = "ART";
+                dr["Prozent"] = 0;
+
+                dr["StaffelCode"] = String.Concat("10.0.1", ".", model.ProffixModel.LAGDokumenteArtikelNrLAG, ".", oCal.Currency.Currency); ////10.0.1.221100200.CHF
+                dr["Verkauf"] = 1;
+                dr["WaehrungPRO"] = oCal.Currency.Currency; //"CHF";
+                dr["Wert"] = RoundDown(oCal.Total, 4);
+
+                dr["ImportNr"] = 0;
+
+                dr["ErstelltAm"] = sNow;
+                dr["ErstelltVon"] = model.GeneralSetting.Employee; //"cs";
+                dr["GeaendertAm"] = sNow;
+                dr["GeaendertVon"] = model.GeneralSetting.Employee; //"cs";
+
+                dr["Geaendert"] = 1;
+                dr["Exportiert"] = 0;
+
+            }
+
+            //delete existing first
+            DeletePREPreisStaffelByProductID(model.ProffixModel.LAGDokumenteArtikelNrLAG, model.ProffixConnection);
+
+            //save data
+            SaveTable(dt, dt.Columns["LaufNr"], null, connectionString: model.ProffixConnection);
+        }
+
+        static void DeletePREPreisStaffelByProductID(string productID, string connectionString)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    ProffixPREPreisStaffelModel oModel = oList.Where(item => item.MengeVon == note.Quantity).FirstOrDefault();
-                    if (oModel != null)
+                    using (SqlCommand cmd = new SqlCommand(String.Format("delete [PRE_PreisStaffel] where [ANummer] = '{0}'", productID), conn))
                     {
-                        oModel.Wert = note.CalculationItems.Where(item => item.Tag == "VK(liste)").FirstOrDefault().Total;
+                        cmd.CommandType = CommandType.Text;
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
                     }
-                }
-
-                //set value columns
-                valueCols.Add(dt.Columns["Wert"]);
-
-                foreach (ProffixPREPreisStaffelModel item in oList)
-                {
-                    DataRow dr = dt.NewRow();
-                    dr["LaufNr"] = item.LaufNr;
-                    dr["Wert"] = item.Wert;
-                    dt.Rows.Add(dr);
-
-                    UpdateRow(
-                        dr,
-                        dt.Columns["LaufNr"],
-                        valueCols,
-                        connectionString: model.ProffixConnection
-                        );
                 }
             }
-            else
+            catch (Exception ex)
             {
-                //set value columns
-                valueCols.AddRange(dt.Columns.Cast<DataColumn>().ToList());
-
-                //insert new
-                DateTime oNow = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US")), "yyyy-MM-dd", new CultureInfo("en-US"));
-                foreach (CalculationNoteModel note in model.CalculationNotes)
-                {
-                    if (note.ID == 0)
-                    {
-                        return;
-                    }
-
-                    DataRow dr = dt.NewRow();
-                    dr["LaufNr"] = 0; //new row
-                    dr["ANummer"] = model.ProffixModel.LAGDokumenteArtikelNrLAG;
-                    dr["ArtikelTyp"] = 1;
-                    dr["AssortiertPRE"] = 0;
-
-                    dr["KNummer"] = 0;
-                    dr["KundenTyp"] = 0;
-
-                    dr["MengeVon"] = note.Quantity;
-                    dr["PreisTypPRE"] = "ART";
-                    dr["Prozent"] = 0;
-
-                    dr["StaffelCode"] = String.Concat("", ".", model.ProffixModel.LAGDokumenteArtikelNrLAG, ".CHF"); ////10.0.1.221100200.CHF
-                    dr["Verkauf"] = 1;
-                    dr["WaehrungPRO"] = "CHF";
-                    dr["Wert"] = note.CalculationItems.Where(item => item.Tag == "VK(liste)").FirstOrDefault().Total;
-
-                    dr["ImportNr"] = 0;
-
-                    dr["ErstelltAm"] = oNow;
-                    dr["ErstelltVon"] = model.GeneralSetting.Employee; //"cs";
-                    dr["GeaendertAm"] = oNow;
-                    dr["GeaendertVon"] = model.GeneralSetting.Employee; //"cs";
-
-                    dr["Geaendert"] = 1;
-                    dr["Exportiert"] = 0;
-
-                    dt.Rows.Add(dr);
-
-                    InsertRowManualIncreaseID(dr, dt.Columns["LaufNr"], null, null, connectionString: model.ProffixConnection);
-                }
+                throw ex;
             }
         }
     }

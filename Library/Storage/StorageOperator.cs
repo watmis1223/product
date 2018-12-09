@@ -158,13 +158,16 @@ namespace ProductCalculation.Library.Storage
             }
         }
 
-        public static void SaveTable(DataTable table, DataColumn primaryKey, DataColumn[] ignoreSaveColumns)
+        public static void SaveTable(DataTable table, DataColumn primaryKey, DataColumn[] ignoreSaveColumns, string connectionString = null)
         {
             StringBuilder query = new StringBuilder();
             StringBuilder queryValues = new StringBuilder();
             List<DataColumn> saveColumns = GetSaveColumns(table, ignoreSaveColumns);
 
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString))
+            string conn = String.IsNullOrWhiteSpace(connectionString) ? 
+                ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString : connectionString;
+
+            using (SqlConnection connection = new SqlConnection(conn))
             {
                 ///building columns
                 query.AppendFormat("insert into [{0}](", table.TableName);

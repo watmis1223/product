@@ -620,7 +620,7 @@
             this.layoutControlItem2.Location = new System.Drawing.Point(0, 364);
             this.layoutControlItem2.Name = "layoutControlItem2";
             this.layoutControlItem2.Size = new System.Drawing.Size(802, 44);
-            this.layoutControlItem2.Text = "Bemerkungen";
+            this.layoutControlItem2.Text = "Lieferant";
             this.layoutControlItem2.TextSize = new System.Drawing.Size(144, 25);
             // 
             // layoutControlGroup5
