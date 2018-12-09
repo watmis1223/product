@@ -112,6 +112,13 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             }
 
             //re width
+            //if (_Model.ID > 0)
+            //{
+            //    gridView1.Columns[TempColumnNames.Description.ToString()].Width = 400;
+            //    gridView1.Columns[TempColumnNames.Sign.ToString()].Width = 50;
+            //    gridView1.Columns[TempColumnNames.Tag.ToString()].Width = 120;
+            //}
+
             if (_Model.GeneralSetting.Convert.Mode == "E" || _Model.GeneralSetting.Currency.Mode == "E")
             {
                 if (_Model.ID > 0)
@@ -121,6 +128,15 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                     gridView1.Columns[TempColumnNames.Tag.ToString()].Width = 120;
                 }
             }
+            //else
+            //{
+            //    if (_Model.ID > 0)
+            //    {
+            //        gridView1.Columns[TempColumnNames.Description.ToString()].Width = 400;
+            //        gridView1.Columns[TempColumnNames.Sign.ToString()].Width = 50;
+            //        gridView1.Columns[TempColumnNames.Tag.ToString()].Width = 120;
+            //    }
+            //}
         }
 
         private void RefreshGrid()

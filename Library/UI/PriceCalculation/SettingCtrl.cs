@@ -35,6 +35,8 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 
         public PriceCalculationSetting GetModel()
         {
+            _Setting = ApplicationOperator.GetPriceCalculationSetting();
+
             return _Setting;
         }
 

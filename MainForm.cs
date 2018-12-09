@@ -233,8 +233,30 @@ namespace ProductCalculation
             //save to pdf
             if (model != null && setting != null)
             {
-                Invoice invoice = new Invoice();
-                invoice.CreateInvoice(model, setting.ReportPathSetting.ReportPath);
+                string sReportPath = "";
+                try
+                {
+                    sReportPath = setting.ReportPathSetting.ReportPath;
+                }
+                catch { }
+
+                if (String.IsNullOrWhiteSpace(sReportPath))
+                {
+                    MessageBox.Show("Report path empty", "Print PDF", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    try
+                    {
+                        Invoice invoice = new Invoice();
+                        invoice.CreateInvoice(model, sReportPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Print PDF", MessageBoxButtons.OK);
+                    }
+
+                }
             }
         }
     }

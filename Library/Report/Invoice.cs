@@ -230,6 +230,24 @@ namespace ProductCalculation.Library.Entity.Report
             return iSummary;
         }
 
+        string GetMarginSummarizeDesc(CalculationNoteModel note)
+        {
+            string desc = "Deckungsbeitrag";
+
+            if (note.CalculationMarginItems != null)
+            {
+                CalculationItemModel oVK = note.CalculationMarginItems.Find(item => item.Tag == "VK");
+                CalculationItemModel oVKbrutto = note.CalculationMarginItems.Find(item => item.Tag == "VK(brutto)");
+
+                if (oVK != null && (oVKbrutto != null && oVKbrutto.VariableTotal > 0))
+                {
+                    desc = String.Format("{0} {1}/{2}", desc, oVK.VariableTotal, oVKbrutto.VariableTotal);
+                }
+            }
+
+            return desc;
+        }
+
         void FillOrderDetailContent(Table orderDetailTable)
         {
             CalculationNoteModel basicNote = _Model.CalculationNotes.Where(item => item.ID == 0).FirstOrDefault();
@@ -290,10 +308,22 @@ namespace ProductCalculation.Library.Entity.Report
                     orderDetailRow.Cells[1].AddParagraph(oCal.Currency.Currency);
                     orderDetailRow.Cells[2].AddParagraph(RoundDown(oCal.Total, 4).ToString());
 
-                    orderDetailRow = orderDetailTable.AddRow();
-                    orderDetailRow.Cells[0].AddParagraph("Deckungsbeitrag");
-                    orderDetailRow.Cells[1].AddParagraph("");
-                    orderDetailRow.Cells[2].AddParagraph(String.Format("{0}%", RoundDown(GetMarginSummarize(note), 4).ToString()));
+                    if (note.CalculationMarginItems != null)
+                    {
+                        oCal = note.CalculationMarginItems.Find(item => item.Tag == "VK");
+                        if (oCal != null)
+                        {
+                            orderDetailRow = orderDetailTable.AddRow();
+                            orderDetailRow.Cells[0].AddParagraph("Deckungsbeitrag");
+                            orderDetailRow.Cells[1].AddParagraph("");
+                            orderDetailRow.Cells[2].AddParagraph(String.Format("{0}", RoundDown(oCal.VariableTotal, 4).ToString()));
+
+                            orderDetailRow = orderDetailTable.AddRow();
+                            orderDetailRow.Cells[0].AddParagraph(GetMarginSummarizeDesc(note));
+                            orderDetailRow.Cells[1].AddParagraph("");
+                            orderDetailRow.Cells[2].AddParagraph(String.Format("{0}%", RoundDown(GetMarginSummarize(note), 4).ToString()));
+                        }
+                    }
                 }
             }
             else
@@ -338,12 +368,23 @@ namespace ProductCalculation.Library.Entity.Report
                     orderDetailRow.Cells[1].AddParagraph(oCal.Currency.Currency);
                     orderDetailRow.Cells[2].AddParagraph(RoundDown(oCal.Total, 4).ToString());
 
-                    orderDetailRow = orderDetailTable.AddRow();
-                    orderDetailRow.Cells[0].AddParagraph("Deckungsbeitrag");
-                    orderDetailRow.Cells[1].AddParagraph("");
-                    orderDetailRow.Cells[2].AddParagraph(String.Format("{0}%", RoundDown(GetMarginSummarize(note), 4).ToString()));
-                }
+                    if (note.CalculationMarginItems != null)
+                    {
+                        oCal = note.CalculationMarginItems.Find(item => item.Tag == "VK");
+                        if (oCal != null)
+                        {
+                            orderDetailRow = orderDetailTable.AddRow();
+                            orderDetailRow.Cells[0].AddParagraph("Deckungsbeitrag");
+                            orderDetailRow.Cells[1].AddParagraph("");
+                            orderDetailRow.Cells[2].AddParagraph(String.Format("{0}", RoundDown(oCal.VariableTotal, 4).ToString()));
 
+                            orderDetailRow = orderDetailTable.AddRow();
+                            orderDetailRow.Cells[0].AddParagraph(GetMarginSummarizeDesc(note));
+                            orderDetailRow.Cells[1].AddParagraph("");
+                            orderDetailRow.Cells[2].AddParagraph(String.Format("{0}%", RoundDown(GetMarginSummarize(note), 4).ToString()));
+                        }
+                    }
+                }
             }
 
 

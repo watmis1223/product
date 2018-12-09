@@ -151,6 +151,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                 if (oProffix.Command == Global.Commands.Open || oProffix.Command == Global.Commands.Copy)
                 {
                     calculationTabPage.PageVisible = true;
+                    mainTabControl.SelectedTabPage = calculationTabPage;
 
                     generalCtrl1.LoadCalculation(oCal);
 
