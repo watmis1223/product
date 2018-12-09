@@ -34,6 +34,7 @@
             this.brBtnCopy = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnNew = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnSave = new DevExpress.XtraBars.BarButtonItem();
+            this.brBtnPrint = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -51,9 +52,10 @@
             this.brBtnPriceSetting,
             this.brBtnCopy,
             this.brBtnNew,
-            this.brBtnSave});
+            this.brBtnSave,
+            this.brBtnPrint});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 13;
+            this.ribbonControl1.MaxItemId = 14;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -110,6 +112,16 @@
             this.brBtnSave.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             this.brBtnSave.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnSave_ItemClick);
             // 
+            // brBtnPrint
+            // 
+            this.brBtnPrint.Caption = "Print";
+            this.brBtnPrint.Id = 13;
+            this.brBtnPrint.ImageOptions.Image = global::ProductCalculation.Properties.Resources.exporttopdf_16x16;
+            this.brBtnPrint.ImageOptions.LargeImage = global::ProductCalculation.Properties.Resources.exporttopdf_32x32;
+            this.brBtnPrint.Name = "brBtnPrint";
+            this.brBtnPrint.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.brBtnPrint.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnPrint_ItemClick);
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -122,6 +134,7 @@
             // 
             this.ribbonPageGroup1.ItemLinks.Add(this.brBrnPrice);
             this.ribbonPageGroup1.ItemLinks.Add(this.brBtnPriceSetting);
+            this.ribbonPageGroup1.ItemLinks.Add(this.brBtnPrint);
             this.ribbonPageGroup1.Name = "ribbonPageGroup1";
             // 
             // ribbonPageGroup2
@@ -174,5 +187,6 @@
         private DevExpress.XtraBars.BarButtonItem brBtnNew;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
         private DevExpress.XtraBars.BarButtonItem brBtnSave;
+        private DevExpress.XtraBars.BarButtonItem brBtnPrint;
     }
 }

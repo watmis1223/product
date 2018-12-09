@@ -12,6 +12,8 @@ using ProductCalculation.Library.UI;
 using ProductCalculation.Library.UI.PriceCalculation;
 using ProductCalculation.Library.Global;
 using System.Diagnostics;
+using ProductCalculation.Library.Entity.PriceCalculation.Models;
+using ProductCalculation.Library.Entity.Report;
 
 namespace ProductCalculation
 {
@@ -41,7 +43,7 @@ namespace ProductCalculation
                         cmd = String.Concat(cmd + " " + _Args[i]);
                     }
 
-                    _Args = new string[] { app, cmd };                                     
+                    _Args = new string[] { app, cmd };
                 }
             }
 
@@ -216,9 +218,23 @@ namespace ProductCalculation
             if (!String.IsNullOrWhiteSpace(command) && (_Args != null && _Args.Length >= 2))
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = _Args[0];                
+                startInfo.FileName = _Args[0];
                 startInfo.Arguments = command;
                 Process.Start(startInfo);
+            }
+        }
+
+        private void brBtnPrint_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            //get calculation model
+            CalculationModel model = _PriceModule.GetCalculationModel();
+
+            //save to pdf
+            if (model != null)
+            {
+                Invoice invoice = new Invoice();
+                //commissionControl1.CalculateCommission(calculationControl1.Order);
+                //invoice.CreateInvoice(calculationControl1.Order);
             }
         }
     }

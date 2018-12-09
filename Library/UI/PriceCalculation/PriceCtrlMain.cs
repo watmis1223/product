@@ -48,6 +48,11 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             generalCtrl1.SetTextLine(_PriceCalculationSetting.TextSetting);
         }
 
+        public CalculationModel GetCalculationModel()
+        {
+            return calculationBasicCtrl1.GetModel();
+        }
+
         public void NewCalculation()
         {
             if (generalCtrl1 != null)
@@ -125,7 +130,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                 }
                 else if (oProffix.Command == Global.Commands.Open)
                 {
-                    oCal.ProffixModel.CalculationID = oCal.ID;                    
+                    oCal.ProffixModel.CalculationID = oCal.ID;
                     oCal.ProffixModel.Command = Global.Commands.Open;
                 }
 

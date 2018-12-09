@@ -56,6 +56,8 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                 chkPrintPreview.CheckState = _Setting.ReportPathSetting.PrintPreview ? CheckState.Checked : CheckState.Unchecked;
 
                 txtProffixConnection.EditValue = _Setting.ProffixConnection;
+
+                txtReportPath.EditValue = _Setting.ReportPathSetting.ReportPath;
             }
             catch { }
         }
@@ -81,6 +83,18 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             _Setting.ReportPathSetting.PrintPreview = chkPrintPreview.CheckState == CheckState.Checked;
 
             _Setting.ProffixConnection = txtProffixConnection.Text;
+
+            _Setting.ReportPathSetting.ReportPath = txtReportPath.Text;
+        }
+
+        private void TxtReportPath_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
+        {
+            FolderBrowserDialog fd = new FolderBrowserDialog();
+
+            if (fd.ShowDialog() == DialogResult.OK)
+            {
+                txtReportPath.Text = fd.SelectedPath;                
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -95,7 +109,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             catch (Exception ex)
             {
                 sMessage = ex.Message;
-            }           
+            }
 
             if (SaveChanged != null)
             {

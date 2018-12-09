@@ -205,6 +205,7 @@
     <Compile Include="Library\Business\PriceCalculation\BasicCalculation.cs" />
     <Compile Include="Library\Entity\PriceCalculation\Extensions\PriceCalculationModelExtension.cs" />
     <Compile Include="Library\Entity\PriceCalculation\Models.cs" />
+    <Compile Include="Library\Report\Invoice.cs" />
     <Compile Include="Library\Entity\Setting\PriceCalculation\PriceCalculationSetting.cs" />
     <Compile Include="Library\Entity\Setting\PriceCalculation\TextSetting.cs" />
     <Compile Include="Library\Entity\Setting\PriceCalculation\PriceSetting.cs" />
@@ -396,6 +397,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\saveas_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exporttopdf_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exporttopdf_16x16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
