@@ -14,6 +14,7 @@ using ProductCalculation.Library.Global;
 using System.Diagnostics;
 using ProductCalculation.Library.Entity.PriceCalculation.Models;
 using ProductCalculation.Library.Entity.Report;
+using ProductCalculation.Library.Entity.Setting.PriceCalculation;
 
 namespace ProductCalculation
 {
@@ -228,13 +229,12 @@ namespace ProductCalculation
         {
             //get calculation model
             CalculationModel model = _PriceModule.GetCalculationModel();
-
+            PriceCalculationSetting setting = _SettingModule.GetModel();
             //save to pdf
-            if (model != null)
+            if (model != null && setting != null)
             {
                 Invoice invoice = new Invoice();
-                //commissionControl1.CalculateCommission(calculationControl1.Order);
-                //invoice.CreateInvoice(calculationControl1.Order);
+                invoice.CreateInvoice(model, setting.ReportPathSetting.ReportPath);
             }
         }
     }

@@ -33,6 +33,11 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             ReloadData();
         }
 
+        public PriceCalculationSetting GetModel()
+        {
+            return _Setting;
+        }
+
         public void ReloadData()
         {
             try
