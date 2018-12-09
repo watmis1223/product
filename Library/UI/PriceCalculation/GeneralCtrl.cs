@@ -26,6 +26,19 @@ namespace ProductCalculation.Library.UI.PriceCalculation
         GeneralSettingModel _Model;
         ProffixModel _ProffixModel;
 
+        string _ConnectionString;
+
+        public GeneralCtrl()
+        {
+            InitializeComponent();
+        }
+
+        private void Ctrl_Load(object sender, EventArgs e)
+        {
+            ddSupplier.Properties.Buttons[0].Visible = true;
+            ddSupplier.Properties.Buttons[1].Visible = false;
+        }
+
         public GeneralSettingModel GetModel()
         {
             return _Model;
@@ -94,6 +107,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
         {
             //if proffix model needed
             _ProffixModel = model;
+            _ConnectionString = connectionString;
 
             //load proffix product
             if (!String.IsNullOrWhiteSpace(model.LAGDokumenteArtikelNrLAG))
@@ -124,6 +138,12 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                     {
                         ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = item.Name, Value = item.LaufNr });
                     }
+                }
+                else
+                {
+                    //enable search functional
+                    //ddSupplier.Properties.Buttons[0].Visible = false;
+                    ddSupplier.Properties.Buttons[1].Visible = true;
                 }
 
                 //load proffix product document
@@ -232,11 +252,6 @@ namespace ProductCalculation.Library.UI.PriceCalculation
         {
             rdoCostTypeList.Enabled = false;
             chkOptionList.Items[0].Enabled = false;
-        }
-
-        public GeneralCtrl()
-        {
-            InitializeComponent();
         }
 
         internal void SetTextLine(TextSetting setting)
@@ -366,11 +381,6 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             }
 
             return oList;
-        }
-
-        private void Ctrl_Load(object sender, EventArgs e)
-        {
-
         }
 
         public void NewCalculation()
@@ -515,6 +525,35 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 
                 btnNew.Enabled = true;
                 //btnReset.Enabled = false;
+            }
+        }
+
+        private void DdSupplier_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(_ConnectionString))
+            {
+                return;
+            }
+
+            if (_ProffixModel == null)
+            {
+                return;
+            }
+
+            if (e.Button.Kind == ButtonPredefines.Search)
+            {
+                //search product
+                //load proffix supplier
+                ProffixADRAdressenModel oModel =
+                StorageOperator.GetProffixADRAdressenModel(ddSupplier.Text, _ConnectionString);
+                if (oModel != null)
+                {
+                    ddSupplier.Properties.Items.Clear();
+                    ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = oModel.Name, Value = oModel.LaufNr });
+
+                    //ddSupplier.Properties.Buttons[0].Visible = true;
+                    //ddSupplier.Properties.Buttons[1].Visible = false;
+                }
             }
         }
     }

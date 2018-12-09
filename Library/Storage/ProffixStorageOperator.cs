@@ -15,7 +15,7 @@ namespace ProductCalculation.Library.Storage
         public static int GetDocumentNumber(string documentTableName, string connectionString)
         {
             int iNumber = 0;
-            
+
             StringBuilder queryValues = new StringBuilder();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -23,7 +23,7 @@ namespace ProductCalculation.Library.Storage
                 ///building columns
                 queryValues.Append("update [LaufNummern] ");
                 queryValues.AppendFormat("set [LaufNr] = [LaufNr] +1 ");
-                queryValues.AppendFormat("where [Tabelle] = '{0}';", documentTableName);                
+                queryValues.AppendFormat("where [Tabelle] = '{0}';", documentTableName);
                 queryValues.AppendFormat(" SELECT LaufNr from [LaufNummern] where [Tabelle] = '{0}';", documentTableName);
 
                 SqlCommand cmd = new SqlCommand();
@@ -164,7 +164,7 @@ namespace ProductCalculation.Library.Storage
             }
 
             return modelList;
-        }
+        }        
 
         public static ProffixLAGDokumente GetProffixLAGDokumente(string artikelNrLAG, string calculationID, string connectionString)
         {

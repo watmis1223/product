@@ -356,10 +356,13 @@
             this.ddSupplier.Location = new System.Drawing.Point(172, 425);
             this.ddSupplier.Name = "ddSupplier";
             this.ddSupplier.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo),
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search)
+            });
             this.ddSupplier.Size = new System.Drawing.Size(651, 40);
             this.ddSupplier.StyleController = this.layoutControl1;
             this.ddSupplier.TabIndex = 24;
+            this.ddSupplier.ButtonClick += DdSupplier_ButtonClick;
             // 
             // txtRemark
             // 
