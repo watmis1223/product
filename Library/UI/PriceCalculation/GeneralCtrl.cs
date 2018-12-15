@@ -285,6 +285,8 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 
             chkTextList.Items[9].Description = setting.Text10;
             chkTextList.Items[9].Value = setting.Text10;
+
+            chkTextList.CheckAll();
         }
 
         public void SetSettingModel()
