@@ -103,7 +103,16 @@ namespace ProductCalculation.Library.Storage
 
             DataColumn[] oCondition = new DataColumn[1];
             DataColumn col = new DataColumn("AdressNrADR", typeof(Int32));
-            col.DefaultValue = adressNrADR;
+
+            try
+            {
+                col.DefaultValue = adressNrADR;
+            }
+            catch
+            {
+                col.DefaultValue = 0;
+            }
+
             oCondition[0] = col;
 
             DataTable dt = LoadTable("ADR_Adressen", oSelect, oCondition, null, connectionString: connectionString);
@@ -122,6 +131,67 @@ namespace ProductCalculation.Library.Storage
                     PLZ = dt.Rows[0]["PLZ"] != null ? dt.Rows[0]["PLZ"].ToString() : String.Empty,
                     Ort = dt.Rows[0]["Ort"] != null ? dt.Rows[0]["Ort"].ToString() : String.Empty,
                 };
+            }
+
+            return model;
+        }
+
+        public static List<ProffixADRAdressenModel> GetProffixADRAdressenList(string name, string connectionString)
+        {
+            List<ProffixADRAdressenModel> model = new List<ProffixADRAdressenModel>();
+
+            if (String.IsNullOrWhiteSpace(connectionString))
+            {
+                return null;
+            }
+
+            DataColumn[] oSelect = {
+                new DataColumn("LaufNr", typeof(Int32)),
+                new DataColumn("AdressNrADR", typeof(Int32)),
+                new DataColumn("Name", typeof(string)),
+                new DataColumn("Vorname", typeof(string)),
+                new DataColumn("Adresszeile1", typeof(string)),
+                new DataColumn("Adresszeile2", typeof(string)),
+                new DataColumn("LandPRO", typeof(string)),
+                new DataColumn("PLZ", typeof(string)),
+                new DataColumn("Ort", typeof(string)),
+            };
+
+            DataColumn[] oCondition = new DataColumn[1];
+            DataColumn col = new DataColumn("Name", typeof(String));
+
+            try
+            {
+                col.DefaultValue = String.Format("%{0}%", name);
+            }
+            catch
+            {
+                col.DefaultValue = "%%";
+            }
+
+            oCondition[0] = col;
+
+            DataTable dt = LoadTable("ADR_Adressen", oSelect, oCondition, null, connectionString: connectionString);
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                foreach(DataRow dr in dt.Rows)
+                {
+                    ProffixADRAdressenModel oModel = new ProffixADRAdressenModel()
+                    {
+                        LaufNr = Convert.ToInt32(dr["LaufNr"]),
+                        AdressNrADR = Convert.ToInt32(dr["AdressNrADR"].ToString()),
+                        Name = dr["Name"] != null ? dr["Name"].ToString() : "-",
+                        Vorname = dr["Vorname"] != null ? dr["Vorname"].ToString() : "-",
+                        Adresszeile1 = dr["Adresszeile1"] != null ? dr["Adresszeile1"].ToString() : "-",
+                        Adresszeile2 = dr["Adresszeile2"] != null ? dr["Adresszeile2"].ToString() : "-",
+                        LandPRO = dr["LandPRO"] != null ? dr["LandPRO"].ToString() : String.Empty,
+                        PLZ = dr["PLZ"] != null ? dr["PLZ"].ToString() : String.Empty,
+                        Ort = dr["Ort"] != null ? dr["Ort"].ToString() : String.Empty,
+                    };
+
+                    model.Add(oModel);
+                }                
             }
 
             return model;
@@ -164,7 +234,7 @@ namespace ProductCalculation.Library.Storage
             }
 
             return modelList;
-        }        
+        }
 
         public static ProffixLAGDokumente GetProffixLAGDokumente(string artikelNrLAG, string calculationID, string connectionString)
         {

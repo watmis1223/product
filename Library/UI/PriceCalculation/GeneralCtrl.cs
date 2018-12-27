@@ -133,10 +133,16 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                 if (oLAGLieferantenList != null)
                 {
                     ddSupplier.Properties.Items.Clear();
-                    //ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = "-", Value = 0 });
+                    ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = "-", Value = 0 });
+
                     foreach (ProffixLAGLieferantenModel item in oLAGLieferantenList)
                     {
                         ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = item.Name, Value = item.LaufNr });
+                    }
+
+                    if (ddSupplier.Properties.Items.Count > 1)
+                    {
+                        ddSupplier.SelectedIndex = 1;
                     }
                 }
                 else
@@ -544,17 +550,20 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 
             if (e.Button.Kind == ButtonPredefines.Search)
             {
-                //search product
-                //load proffix supplier
-                ProffixADRAdressenModel oModel =
-                StorageOperator.GetProffixADRAdressenModel(ddSupplier.Text, _ConnectionString);
-                if (oModel != null)
+                SearchAddressDialog dlg = new SearchAddressDialog();
+                dlg.ProffixConnectionString = _ConnectionString;
+                if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    ddSupplier.Properties.Items.Clear();
-                    ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = oModel.Name, Value = oModel.LaufNr });
+                    if (dlg.Model != null)
+                    {
+                        ddSupplier.Properties.Items.Clear();
+                        ddSupplier.Properties.Items.Add(new ComboboxItemModel() { Caption = dlg.Model.Name, Value = dlg.Model.LaufNr });
+                    }
+                }
 
-                    //ddSupplier.Properties.Buttons[0].Visible = true;
-                    //ddSupplier.Properties.Buttons[1].Visible = false;
+                if (ddSupplier.Properties.Items.Count == 1)
+                {
+                    ddSupplier.SelectedIndex = 0;
                 }
             }
         }
