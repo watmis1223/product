@@ -260,7 +260,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             }
             catch (Exception ex)
             {
-                sMessage = ex.Message;
+                sMessage = ex.StackTrace;
             }
 
             if (SaveChanged != null)

@@ -50,14 +50,26 @@ namespace ProductCalculation.Library.Entity.Report
 
             _Model = model;
 
-            _ReportHeader = string.Format("Kalkulation {0} {1}",
-                (!String.IsNullOrWhiteSpace(_Model.ProffixModel.LAGDokumenteArtikelNrLAG) ? "Artikel" : "Adress"),
-                (!String.IsNullOrWhiteSpace(_Model.ProffixModel.LAGDokumenteArtikelNrLAG) ? _Model.ProffixModel.LAGDokumenteArtikelNrLAG : _Model.ProffixModel.ADRDokumenteDokumentNrADR));
+            //if (_Model.ProffixModel != null)
+            //{
+            //    _ReportHeader = string.Format("Kalkulation {0} {1}",
+            //    (!String.IsNullOrWhiteSpace(_Model.ProffixModel.LAGDokumenteArtikelNrLAG) ? "Artikel" : "Adress"),
+            //    (!String.IsNullOrWhiteSpace(_Model.ProffixModel.LAGDokumenteArtikelNrLAG) ? _Model.ProffixModel.LAGDokumenteArtikelNrLAG : _Model.ProffixModel.ADRDokumenteDokumentNrADR));
 
-            _ReportID = string.Format("Kalkulation_{0}_{1}_{2}.pdf",
-                (!String.IsNullOrWhiteSpace(_Model.ProffixModel.LAGDokumenteArtikelNrLAG) ? "Artikel" : "Adress"),
-                (!String.IsNullOrWhiteSpace(_Model.ProffixModel.LAGDokumenteArtikelNrLAG) ? _Model.ProffixModel.LAGDokumenteArtikelNrLAG : _Model.ProffixModel.ADRDokumenteDokumentNrADR),
-                DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+            //    _ReportID = string.Format("Kalkulation_{0}_{1}_{2}.pdf",
+            //        (!String.IsNullOrWhiteSpace(_Model.ProffixModel.LAGDokumenteArtikelNrLAG) ? "Artikel" : "Adress"),
+            //        (!String.IsNullOrWhiteSpace(_Model.ProffixModel.LAGDokumenteArtikelNrLAG) ? _Model.ProffixModel.LAGDokumenteArtikelNrLAG : _Model.ProffixModel.ADRDokumenteDokumentNrADR),
+            //        DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+            //}
+            //else
+            //{
+            //    _ReportHeader = string.Format("Kalkulation {0}", DateTime.Now.ToString("yyyyMMdd HHmmss"));
+            //    _ReportID = string.Format("Kalkulation_{0}.pdf", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+            //}
+
+            _ReportHeader = string.Format("Kalkulation {0}", DateTime.Now.ToString("yyyyMMdd HHmmss"));
+            _ReportID = string.Format("Kalkulation_{0}.pdf", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+
 
             CreateDocument();
 
@@ -141,17 +153,17 @@ namespace ProductCalculation.Library.Entity.Report
             paragraph = reportSection.AddParagraph();
             paragraph.AddText(DateTime.Now.ToString("dd/MM/yyyy", new CultureInfo("en-US")));
             paragraph.AddLineBreak();
-            paragraph.AddText(_Model.GeneralSetting.Supplier);
+            paragraph.AddText(String.IsNullOrWhiteSpace(_Model.GeneralSetting.Supplier) ? "-" : _Model.GeneralSetting.Supplier);
             paragraph.AddLineBreak();
-            paragraph.AddText(_Model.GeneralSetting.ProductDesc.Line1);
+            paragraph.AddText(String.IsNullOrWhiteSpace(_Model.GeneralSetting.ProductDesc.Line1) ? "-" : _Model.GeneralSetting.ProductDesc.Line1);
             paragraph.AddLineBreak();
-            paragraph.AddText(_Model.GeneralSetting.ProductDesc.Line2);
+            paragraph.AddText(String.IsNullOrWhiteSpace(_Model.GeneralSetting.ProductDesc.Line2) ? "-" : _Model.GeneralSetting.ProductDesc.Line2);
             paragraph.AddLineBreak();
-            paragraph.AddText(_Model.GeneralSetting.ProductDesc.Line3);
+            paragraph.AddText(String.IsNullOrWhiteSpace(_Model.GeneralSetting.ProductDesc.Line3) ? "-" : _Model.GeneralSetting.ProductDesc.Line3);
             paragraph.AddLineBreak();
-            paragraph.AddText(_Model.GeneralSetting.ProductDesc.Line4);
+            paragraph.AddText(String.IsNullOrWhiteSpace(_Model.GeneralSetting.ProductDesc.Line4) ? "-" : _Model.GeneralSetting.ProductDesc.Line4);
             paragraph.AddLineBreak();
-            paragraph.AddText(_Model.GeneralSetting.ProductDesc.Line5);
+            paragraph.AddText(String.IsNullOrWhiteSpace(_Model.GeneralSetting.ProductDesc.Line5) ? "-" : _Model.GeneralSetting.ProductDesc.Line5);
             paragraph.Format.Font.Size = 9;
             paragraph.Format.Alignment = ParagraphAlignment.Left;
 
