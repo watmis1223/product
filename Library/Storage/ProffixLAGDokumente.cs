@@ -99,7 +99,7 @@ namespace ProductCalculation.Library.Storage
 
             CultureInfo oCulture = new CultureInfo("en-US");
             DateTime oNow = DateTime.Now;
-            
+
             //get running no.
             model.ProffixModel.LAGDokumenteLaufNr = GetDocumentNumber(_LAG_Dokumente, model.ProffixConnection);
 
@@ -139,20 +139,25 @@ namespace ProductCalculation.Library.Storage
             dr["Bezeichnung"] = sBezeichnung.Length > 100 ? sBezeichnung.Substring(0, 100) : sBezeichnung;
 
             dr["DateiName"] = String.Format("open {0} {1}", model.ProffixModel.LAGDokumenteArtikelNrLAG, model.ID);
-            dr["Datum"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
+            //dr["Datum"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
+            dr["Datum"] = "CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))";
+            //CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))
             dr["DokGruppe"] = "Kalkulationen";
             dr["DokumentNrLAG"] = dr["LaufNr"]; //String.Format("(select max([LaufNr]) + 1 from {0})", _LAG_Dokumente);
             //dr["Drucken"] = DBNull.Value;
             dr["Modul"] = model.ProffixModel.AppPath;
             dr["ImportNr"] = 0;
-            dr["ErstelltAm"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
+            //dr["ErstelltAm"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
+            dr["ErstelltAm"] = "CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))";
             dr["ErstelltVon"] = model.GeneralSetting.Employee;
             //dr["GeaendertAm"] = DBNull.Value;
             //dr["GeaendertVon"] = DBNull.Value;
             dr["Geaendert"] = 0;
             dr["Exportiert"] = 0;
 
-            InsertRowManualIncreaseID(dr, null, null, null, model.ProffixConnection);            
+            InsertRowManualIncreaseID(dr, null, null,
+                (new List<DataColumn>() { dt.Columns["Datum"], dt.Columns["ErstelltAm"] }).ToArray(),
+                connectionString: model.ProffixConnection);
         }
 
         public static ProffixLAGDokumente GetLAG_DokumenteByID(int documentID, string connectionString)

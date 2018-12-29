@@ -17,7 +17,17 @@ namespace ProductCalculation.Library.Storage
 
             if (primaryKey.DataType == typeof(string))
             {
-                valueString = string.Format("'{0}'", (currentRow[primaryKey] != null ? currentRow[primaryKey].ToString() : ""));
+                string sValue = (currentRow[primaryKey] != null ? currentRow[primaryKey].ToString() : "");
+
+                if (sValue.StartsWith("$"))
+                {
+                    sValue = sValue.Substring(1);
+                    valueString = string.Format("{0}", sValue);
+                }
+                else
+                {
+                    valueString = string.Format("'{0}'", sValue);
+                }
             }
             else if (primaryKey.DataType == typeof(Guid))
             {
@@ -164,7 +174,7 @@ namespace ProductCalculation.Library.Storage
             StringBuilder queryValues = new StringBuilder();
             List<DataColumn> saveColumns = GetSaveColumns(table, ignoreSaveColumns);
 
-            string conn = String.IsNullOrWhiteSpace(connectionString) ? 
+            string conn = String.IsNullOrWhiteSpace(connectionString) ?
                 ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString : connectionString;
 
             using (SqlConnection connection = new SqlConnection(conn))

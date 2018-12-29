@@ -60,10 +60,10 @@ namespace ProductCalculation.Library.Storage
                 
                 new DataColumn("ImportNr", typeof(Int32)), //0
 
-                new DataColumn("ErstelltAm", typeof(string)),
+                new DataColumn("ErstelltAm", typeof(string)), //datetime
                 //new DataColumn("ErstelltAm", typeof(DateTime)),
                 new DataColumn("ErstelltVon", typeof(string)), //cs
-                new DataColumn("GeaendertAm", typeof(string)),
+                new DataColumn("GeaendertAm", typeof(string)), //datetime
                 //new DataColumn("GeaendertAm", typeof(DateTime)),
                 new DataColumn("GeaendertVon", typeof(string)), //cs
 
@@ -73,7 +73,8 @@ namespace ProductCalculation.Library.Storage
             dt.Columns.AddRange(cols);
 
 
-            string sNow = DateTime.Now.ToString("yyyy-MM-dd 00:00:00.000", new CultureInfo("en-US"));
+            //string sNow = DateTime.Now.ToString("yyyy-MM-dd 00:00:00.000", new CultureInfo("en-US"));
+            string sNow = "$CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))";
 
             //basic note
             CalculationNoteModel basicNote = model.CalculationNotes.Where(item => item.ID == 0).FirstOrDefault();

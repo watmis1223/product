@@ -139,20 +139,24 @@ namespace ProductCalculation.Library.Storage
             dr["Bezeichnung"] = sBezeichnung.Length > 100 ? sBezeichnung.Substring(0, 100) : sBezeichnung;
 
             dr["DateiName"] = String.Format("open {0} {1}", model.ProffixModel.ADRDokumenteDokumentNrADR, model.ID);
-            dr["Datum"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
+            //dr["Datum"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
+            dr["Datum"] = "CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))";
             dr["DokGruppe"] = "Kalkulationen";
             dr["DokumentNrADR"] = dr["LaufNr"];//String.Format("(select max([LaufNr]) + 1 from {0})", _ADR_Dokumente);
             //dr["KontaktNrADR"] = DBNull.Value;
             dr["Modul"] = model.ProffixModel.AppPath;
             dr["ImportNr"] = 0;
-            dr["ErstelltAm"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
+            //dr["ErstelltAm"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
+            dr["ErstelltAm"] = "CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))";
             dr["ErstelltVon"] = model.GeneralSetting.Employee;
             //dr["GeaendertAm"] = DBNull.Value;
             //dr["GeaendertVon"] = DBNull.Value;
             dr["Geaendert"] = 0;
             dr["Exportiert"] = 0;
 
-            InsertRowManualIncreaseID(dr, null, null, null, model.ProffixConnection);
+            InsertRowManualIncreaseID(dr, null, null,
+                (new List<DataColumn> { dt.Columns["Datum"], dt.Columns["ErstelltAm"] }).ToArray(),
+                connectionString: model.ProffixConnection);
         }
 
         public static ProffixADRDokumente GetADR_DokumenteByID(int documentID, string connectionString)
