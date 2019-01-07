@@ -33,6 +33,46 @@ namespace ProductCalculation.Library.Storage
             return iID;
         }
 
+        public static void InActiveCalculationActive()
+        {
+            StringBuilder queryValues = new StringBuilder();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString))
+            {
+                ///building columns
+                queryValues.Append("update [CalPrice] ");
+                queryValues.AppendFormat("set [ISACTIVE] = 'N' ");
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+                connection.Open();
+                cmd.CommandText = queryValues.ToString();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+                cmd.Dispose();
+            }
+        }
+
+        public static void InActiveCalculationDetailActive()
+        {
+            StringBuilder queryValues = new StringBuilder();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString))
+            {
+                ///building columns
+                queryValues.Append("update [CalPriceDetail] ");
+                queryValues.AppendFormat("set [ISACTIVE] = 'N' ");
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+                connection.Open();
+                cmd.CommandText = queryValues.ToString();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+                cmd.Dispose();
+            }
+        }
+
         public static CalculationModel CalPriceLoadByID(long id)
         {
             CalculationModel model = null;
@@ -73,6 +113,22 @@ namespace ProductCalculation.Library.Storage
                         );
 
                 model = Utility.JsonToObject<CalculationModel>(Zipper.Unzip(Convert.FromBase64String(sEncodeJson)));
+
+                //set active
+                if (model != null)
+                {
+                    try
+                    {
+                        if (model.GeneralSetting.Options.Contains("A"))
+                        {
+                            if (dt.Rows[0]["ISACTIVE"].ToString() == "N")
+                            {
+                                model.GeneralSetting.Options.Remove("A");
+                            }
+                        }
+                    }
+                    catch { }
+                }
             }
 
             return model;
@@ -94,6 +150,8 @@ namespace ProductCalculation.Library.Storage
                 dt.Columns.Add(new DataColumn("JsonData8", typeof(string)));
                 dt.Columns.Add(new DataColumn("JsonData9", typeof(string)));
                 dt.Columns.Add(new DataColumn("JsonData10", typeof(string)));
+                dt.Columns.Add(new DataColumn("CreatedDate", typeof(string)));
+                dt.Columns.Add(new DataColumn("ISACTIVE", typeof(string)));
 
                 //create new calculation row
                 DataRow dr = dt.NewRow();
@@ -102,19 +160,31 @@ namespace ProductCalculation.Library.Storage
                 //set insert columns
                 List<DataColumn> oIgnoreSave = new List<DataColumn>();
                 oIgnoreSave.Add(dt.Columns["PriceID"]);
+
+                DateTime oNow = DateTime.Now;
+
                 if (model.ID == 0)
                 {
                     //insert new row first to get id
                     dr["JsonData1"] = "NEW";
                     model.ID = InsertRowReturnIdentity(dt.Rows[0], dt.Columns["PriceID"], oIgnoreSave.ToArray());
+
+                    dr["CreatedDate"] = oNow.ToString("yyyy-MM-dd HH:mm:ss", new CultureInfo("en-US"));
                 }
                 dr["PriceID"] = model.ID;
+
+                try
+                {
+                    dr["ISACTIVE"] = model.GeneralSetting.Options.Contains("A") ? "Y" : "N";
+                }
+                catch { }
+
 
                 //save proffix if needed
                 SaveProffix(model);
 
                 //update calculation
-                model.CalculaionDateTime = DateTime.Now.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
+                model.CalculaionDateTime = oNow.ToString("yyyy-MM-dd", new CultureInfo("en-US"));
                 string sJson = Utility.ObjectToJson(model);
                 string sCompress = Zipper.Zip(sJson);
 
@@ -135,7 +205,15 @@ namespace ProductCalculation.Library.Storage
 
                     i += 1;
                 }
-                //update jsondata by particular row
+
+                //only one active allowed
+                if (dr["ISACTIVE"].ToString() == "Y")
+                {
+                    InActiveCalculationActive();
+                    InActiveCalculationDetailActive();
+                }
+
+                //update jsondata by particular row                
                 SaveTable(dt, dt.Columns["PriceID"], oIgnoreSave.ToArray());
 
                 //save detail
@@ -247,37 +325,38 @@ namespace ProductCalculation.Library.Storage
 
                 dt.Columns.Add(new DataColumn("Quantity", typeof(decimal)));
                 dt.Columns.Add(new DataColumn("Bareinkaufspreis", typeof(decimal))); //BEK
-                //dt.Columns.Add(new DataColumn("Bezugskosten", typeof(decimal))); //BZK
-                //dt.Columns.Add(new DataColumn("BEN1", typeof(decimal)));
-                //dt.Columns.Add(new DataColumn("BEN2", typeof(decimal)));
-                //dt.Columns.Add(new DataColumn("BEN3", typeof(decimal)));
-                //dt.Columns.Add(new DataColumn("BEN4", typeof(decimal)));
-                //dt.Columns.Add(new DataColumn("BEN5", typeof(decimal)));
-                //dt.Columns.Add(new DataColumn("BEN6", typeof(decimal)));
-                //dt.Columns.Add(new DataColumn("BEN7", typeof(decimal)));
-                //dt.Columns.Add(new DataColumn("BEN8", typeof(decimal)));
-                //dt.Columns.Add(new DataColumn("BEN9", typeof(decimal)));
-                //dt.Columns.Add(new DataColumn("BEN10", typeof(decimal)));
+                                                                                     //dt.Columns.Add(new DataColumn("Bezugskosten", typeof(decimal))); //BZK
+                                                                                     //dt.Columns.Add(new DataColumn("BEN1", typeof(decimal)));
+                                                                                     //dt.Columns.Add(new DataColumn("BEN2", typeof(decimal)));
+                                                                                     //dt.Columns.Add(new DataColumn("BEN3", typeof(decimal)));
+                                                                                     //dt.Columns.Add(new DataColumn("BEN4", typeof(decimal)));
+                                                                                     //dt.Columns.Add(new DataColumn("BEN5", typeof(decimal)));
+                                                                                     //dt.Columns.Add(new DataColumn("BEN6", typeof(decimal)));
+                                                                                     //dt.Columns.Add(new DataColumn("BEN7", typeof(decimal)));
+                                                                                     //dt.Columns.Add(new DataColumn("BEN8", typeof(decimal)));
+                                                                                     //dt.Columns.Add(new DataColumn("BEN9", typeof(decimal)));
+                                                                                     //dt.Columns.Add(new DataColumn("BEN10", typeof(decimal)));
                 dt.Columns.Add(new DataColumn("Einstandspreis", typeof(decimal))); //ESTP
-                //dt.Columns.Add(new DataColumn("Verwaltungsgemeinkosten", typeof(decimal))); //OGK
-                //dt.Columns.Add(new DataColumn("Vertriebsgemeinkosten", typeof(decimal))); //VGK
-                //dt.Columns.Add(new DataColumn("Sondereinzelkosten", typeof(decimal))); //VSK
-                //dt.Columns.Add(new DataColumn("Verwaltungs", typeof(decimal))); //VVK
+                                                                                   //dt.Columns.Add(new DataColumn("Verwaltungsgemeinkosten", typeof(decimal))); //OGK
+                                                                                   //dt.Columns.Add(new DataColumn("Vertriebsgemeinkosten", typeof(decimal))); //VGK
+                                                                                   //dt.Columns.Add(new DataColumn("Sondereinzelkosten", typeof(decimal))); //VSK
+                                                                                   //dt.Columns.Add(new DataColumn("Verwaltungs", typeof(decimal))); //VVK
                 dt.Columns.Add(new DataColumn("Selbstkosten1", typeof(decimal))); //SK1
-                //dt.Columns.Add(new DataColumn("Lagerhaltungskosten", typeof(decimal))); //LHK
-                //dt.Columns.Add(new DataColumn("Verpackungsanteil", typeof(decimal))); //VPA
-                //dt.Columns.Add(new DataColumn("Transportanteil", typeof(decimal))); //TRA
+                                                                                  //dt.Columns.Add(new DataColumn("Lagerhaltungskosten", typeof(decimal))); //LHK
+                                                                                  //dt.Columns.Add(new DataColumn("Verpackungsanteil", typeof(decimal))); //VPA
+                                                                                  //dt.Columns.Add(new DataColumn("Transportanteil", typeof(decimal))); //TRA
                 dt.Columns.Add(new DataColumn("Selbstkosten2", typeof(decimal))); //SK2
                 dt.Columns.Add(new DataColumn("Gewinnaufschlag", typeof(decimal))); //GA
                 dt.Columns.Add(new DataColumn("Barverkaufspreis", typeof(decimal))); //VK(bar)
-                //dt.Columns.Add(new DataColumn("Kundenskonto", typeof(decimal))); //SKT
-                //dt.Columns.Add(new DataColumn("Verhandlungsspielraum", typeof(decimal))); //PV
+                                                                                     //dt.Columns.Add(new DataColumn("Kundenskonto", typeof(decimal))); //SKT
+                                                                                     //dt.Columns.Add(new DataColumn("Verhandlungsspielraum", typeof(decimal))); //PV
                 dt.Columns.Add(new DataColumn("Zielverkaufspreis", typeof(decimal))); //VK(ziel)
-                //dt.Columns.Add(new DataColumn("Kundenrabatt", typeof(decimal))); //RBT
+                                                                                      //dt.Columns.Add(new DataColumn("Kundenrabatt", typeof(decimal))); //RBT
                 dt.Columns.Add(new DataColumn("Nettoverkaufspreis", typeof(decimal))); //VK(liste)
-                //dt.Columns.Add(new DataColumn("Mehrwertsteuer", typeof(decimal))); //MWST
+                                                                                       //dt.Columns.Add(new DataColumn("Mehrwertsteuer", typeof(decimal))); //MWST
                 dt.Columns.Add(new DataColumn("Bruttoverkaufspreis", typeof(decimal))); //VK(brutto)
                 dt.Columns.Add(new DataColumn("Deckungsbeitrag", typeof(decimal)));
+                dt.Columns.Add(new DataColumn("ISACTIVE", typeof(string)));
 
                 //create details rows
                 //basic note
@@ -303,7 +382,7 @@ namespace ProductCalculation.Library.Storage
 
                     //basic
                     dr["Bareinkaufspreis"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "BEK").FirstOrDefault().Total, 4); //BEK
-                    //dr["Bezugskosten"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "BZK").FirstOrDefault().Total, 4); //BZK
+                                                                                                                                               //dr["Bezugskosten"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "BZK").FirstOrDefault().Total, 4); //BZK
 
                     //dr["BEN1"] = RoundDown(GetBenItemTotal(basicNote, "BEN 1"), 4);
                     //dr["BEN2"] = RoundDown(GetBenItemTotal(basicNote, "BEN 2"), 4);
@@ -317,27 +396,33 @@ namespace ProductCalculation.Library.Storage
                     //dr["BEN10"] = RoundDown(GetBenItemTotal(basicNote, "BEN 10"), 4);
 
                     dr["Einstandspreis"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "ESTP").FirstOrDefault().Total, 4); //ESTP
-                    //dr["Verwaltungsgemeinkosten"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "OGK").FirstOrDefault().Total, 4); //OGK
-                    //dr["Vertriebsgemeinkosten"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "VGK").FirstOrDefault().Total, 4); //VGK
-                    //dr["Sondereinzelkosten"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "VSK").FirstOrDefault().Total, 4); //VSK
-                    //dr["Verwaltungs"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "VVK").FirstOrDefault().Total, 4); //VVK
+                                                                                                                                              //dr["Verwaltungsgemeinkosten"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "OGK").FirstOrDefault().Total, 4); //OGK
+                                                                                                                                              //dr["Vertriebsgemeinkosten"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "VGK").FirstOrDefault().Total, 4); //VGK
+                                                                                                                                              //dr["Sondereinzelkosten"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "VSK").FirstOrDefault().Total, 4); //VSK
+                                                                                                                                              //dr["Verwaltungs"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "VVK").FirstOrDefault().Total, 4); //VVK
                     dr["Selbstkosten1"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "SK 1").FirstOrDefault().Total, 4); //SK1
-                    //dr["Lagerhaltungskosten"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "LHK").FirstOrDefault().Total, 4); //LHK
-                    //dr["Verpackungsanteil"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "VPA").FirstOrDefault().Total, 4); //VPA
-                    //dr["Transportanteil"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "TRA").FirstOrDefault().Total, 4); //TRA
+                                                                                                                                             //dr["Lagerhaltungskosten"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "LHK").FirstOrDefault().Total, 4); //LHK
+                                                                                                                                             //dr["Verpackungsanteil"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "VPA").FirstOrDefault().Total, 4); //VPA
+                                                                                                                                             //dr["Transportanteil"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "TRA").FirstOrDefault().Total, 4); //TRA
                     dr["Selbstkosten2"] = RoundDown(basicNote.CalculationItems.Where(item => item.Tag == "SK 2").FirstOrDefault().Total, 4); //SK2
 
                     //scale
                     dr["Gewinnaufschlag"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "GA").FirstOrDefault().Total, 4); //GA
                     dr["Barverkaufspreis"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "VK(bar)").FirstOrDefault().Total, 4); //VK(bar)
-                    //dr["Kundenskonto"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "SKT").FirstOrDefault().Total, 4); //SKT
-                    //dr["Verhandlungsspielraum"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "PV").FirstOrDefault().Total, 4); //PV
+                                                                                                                                              //dr["Kundenskonto"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "SKT").FirstOrDefault().Total, 4); //SKT
+                                                                                                                                              //dr["Verhandlungsspielraum"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "PV").FirstOrDefault().Total, 4); //PV
                     dr["Zielverkaufspreis"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "VK(ziel)").FirstOrDefault().Total, 4); //VK(ziel)
-                    //dr["Kundenrabatt"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "RBT").FirstOrDefault().Total, 4); //RBT
+                                                                                                                                                //dr["Kundenrabatt"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "RBT").FirstOrDefault().Total, 4); //RBT
                     dr["Nettoverkaufspreis"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "VK(liste)").FirstOrDefault().Total, 4); //VK(liste)
-                    //dr["Mehrwertsteuer"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "MWST").FirstOrDefault().Total, 4); //MWST
+                                                                                                                                                  //dr["Mehrwertsteuer"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "MWST").FirstOrDefault().Total, 4); //MWST
                     dr["Bruttoverkaufspreis"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "VK(brutto)").FirstOrDefault().Total, 4); //VK(brutto)
                     dr["Deckungsbeitrag"] = RoundDown(GetMarginSummarize(note), 4);
+
+                    try
+                    {
+                        dr["ISACTIVE"] = model.GeneralSetting.Options.Contains("A") ? "Y" : "N";
+                    }
+                    catch { }
                 }
 
                 SaveTable(dt, dt.Columns["PriceDetailID"], new DataColumn[] { dt.Columns["PriceDetailID"] });
