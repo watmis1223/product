@@ -535,6 +535,8 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
         //[ScriptIgnore]
         //public int CopyScale { get; set; }
 
+        public bool IsDelete { get; set; }
+
         public override string ToString()
         {
             return DateTime.Now.ToString();

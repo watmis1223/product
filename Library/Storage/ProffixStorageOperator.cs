@@ -36,7 +36,8 @@ namespace ProductCalculation.Library.Storage
             }
 
             return iNumber;
-        }
+        }       
+
         public static ProffixLAGArtikelModel GetProffixLAGArtikelModel(string artikelNrLAG, string connectionString)
         {
             ProffixLAGArtikelModel model = null;

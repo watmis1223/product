@@ -108,6 +108,31 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             btnSave_Click(null, null);
         }
 
+        public void DeleteModel(GeneralSettingModel setting)
+        {
+            if (_Model == null)
+            {
+                return;
+            }
+
+            _Model.IsDelete = true;
+
+            if (setting != null)
+            {
+                _Model.GeneralSetting.Remark = setting.Remark;
+                _Model.GeneralSetting.Supplier = setting.Supplier;
+                _Model.GeneralSetting.Employee = setting.Employee;
+                _Model.GeneralSetting.Info = setting.Info;
+                _Model.GeneralSetting.CreateDate = setting.CreateDate;
+
+                _Model.GeneralSetting.Convert = setting.Convert;
+                _Model.GeneralSetting.Currency = setting.Currency;
+                _Model.GeneralSetting.Options = setting.Options;
+            }
+
+            btnSave_Click(null, null);
+        }
+
         void GridControl_Paint(object sender, PaintEventArgs e)
         {
             //paint empty vertical column(s)
@@ -139,6 +164,24 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 
         public CalculationModel GetModel()
         {
+            return _Model;
+        }
+
+        public CalculationModel GetModel(GeneralSettingModel setting)
+        {
+            if (setting != null)
+            {
+                _Model.GeneralSetting.Remark = setting.Remark;
+                _Model.GeneralSetting.Supplier = setting.Supplier;
+                _Model.GeneralSetting.Employee = setting.Employee;
+                _Model.GeneralSetting.Info = setting.Info;
+                _Model.GeneralSetting.CreateDate = setting.CreateDate;
+
+                _Model.GeneralSetting.Convert = setting.Convert;
+                _Model.GeneralSetting.Currency = setting.Currency;
+                _Model.GeneralSetting.Options = setting.Options;
+            }
+
             return _Model;
         }
 
@@ -254,6 +297,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
         {
             //save model to db
             string sMessage = "Die Speicherung ist abgeschlossen.";
+
             try
             {
                 StorageOperator.SaveCalculationModel(_Model);

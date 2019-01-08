@@ -73,6 +73,46 @@ namespace ProductCalculation.Library.Storage
             }
         }
 
+        public static void DeleteCalculationByID(long id)
+        {
+            StringBuilder queryValues = new StringBuilder();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString))
+            {
+                ///building columns
+                queryValues.Append("delete [CalPrice] ");
+                queryValues.AppendFormat("where [PriceID] = {0}", id);
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+                connection.Open();
+                cmd.CommandText = queryValues.ToString();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+                cmd.Dispose();
+            }
+        }
+
+        public static void DeleteCalculationDetailByParentID(long parentId)
+        {
+            StringBuilder queryValues = new StringBuilder();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["DBConnectionString"].ConnectionString))
+            {
+                ///building columns
+                queryValues.Append("delete [CalPriceDetail] ");
+                queryValues.AppendFormat("where [PriceID] = {0}", parentId);
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+                connection.Open();
+                cmd.CommandText = queryValues.ToString();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+                cmd.Dispose();
+            }
+        }
+
         public static CalculationModel CalPriceLoadByID(long id)
         {
             CalculationModel model = null;
@@ -455,19 +495,44 @@ namespace ProductCalculation.Library.Storage
 
 
             //2. save LAG_Artikel
-            if (model.GeneralSetting.PriceScale.Scale == 1 && model.GeneralSetting.Options.Contains("A"))
+            if (model.IsDelete)
             {
-                if (!String.IsNullOrWhiteSpace(model.ProffixModel.LAGDokumenteArtikelNrLAG))
+                if (model.GeneralSetting.PriceScale.Scale == 1)
                 {
-                    SaveLAG_Artikel(model);
+                    if (!String.IsNullOrWhiteSpace(model.ProffixModel.LAGDokumenteArtikelNrLAG))
+                    {
+                        SaveLAG_Artikel(model, defaultValue: 0);
+                    }
+                }
+            }
+            else
+            {
+                if (model.GeneralSetting.PriceScale.Scale == 1 && model.GeneralSetting.Options.Contains("A"))
+                {
+                    if (!String.IsNullOrWhiteSpace(model.ProffixModel.LAGDokumenteArtikelNrLAG))
+                    {
+                        SaveLAG_Artikel(model);
+                    }
                 }
             }
 
+
             //3. save scale if needed (active)
-            if (model.GeneralSetting.PriceScale.Scale > 1 && model.GeneralSetting.Options.Contains("A"))
+            if (model.IsDelete)
             {
-                //delete existing scale first                
-                SavePRE_PreisStaffel(model);
+                if (model.GeneralSetting.PriceScale.Scale > 1)
+                {
+                    //delete existing scale first                
+                    SavePRE_PreisStaffel(model);
+                }
+            }
+            else
+            {
+                if (model.GeneralSetting.PriceScale.Scale > 1 && model.GeneralSetting.Options.Contains("A"))
+                {
+                    //delete existing scale first                
+                    SavePRE_PreisStaffel(model);
+                }
             }
         }
     }

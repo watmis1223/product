@@ -18,6 +18,6 @@ namespace ProductCalculation.Library.Global
     {        
         New,
         Open,
-        Copy
+        Copy        
     }
 }

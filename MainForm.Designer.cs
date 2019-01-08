@@ -35,6 +35,7 @@
             this.brBtnNew = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnSave = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnPrint = new DevExpress.XtraBars.BarButtonItem();
+            this.brBtnDelete = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -53,7 +54,8 @@
             this.brBtnCopy,
             this.brBtnNew,
             this.brBtnSave,
-            this.brBtnPrint});
+            this.brBtnPrint,
+            this.brBtnDelete});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
             this.ribbonControl1.MaxItemId = 14;
             this.ribbonControl1.Name = "ribbonControl1";
@@ -122,6 +124,16 @@
             this.brBtnPrint.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             this.brBtnPrint.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnPrint_ItemClick);
             // 
+            // brBtnDelete
+            // 
+            this.brBtnDelete.Caption = "Delete";
+            this.brBtnDelete.Id = 14;
+            this.brBtnDelete.ImageOptions.Image = global::ProductCalculation.Properties.Resources.deletelist_32x32;
+            this.brBtnDelete.ImageOptions.LargeImage = global::ProductCalculation.Properties.Resources.deletelist_32x32;
+            this.brBtnDelete.Name = "brBtnDelete";
+            this.brBtnDelete.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.brBtnDelete.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnDelete_ItemClick);
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -141,6 +153,7 @@
             // 
             this.ribbonPageGroup2.ItemLinks.Add(this.brBtnNew);
             this.ribbonPageGroup2.ItemLinks.Add(this.brBtnCopy);
+            this.ribbonPageGroup2.ItemLinks.Add(this.brBtnDelete);
             this.ribbonPageGroup2.ItemLinks.Add(this.brBtnSave);
             this.ribbonPageGroup2.Name = "ribbonPageGroup2";
             // 
@@ -185,6 +198,7 @@
         private DevExpress.XtraEditors.PanelControl pnlMain;
         private DevExpress.XtraBars.BarButtonItem brBtnCopy;
         private DevExpress.XtraBars.BarButtonItem brBtnNew;
+        private DevExpress.XtraBars.BarButtonItem brBtnDelete;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
         private DevExpress.XtraBars.BarButtonItem brBtnSave;
         private DevExpress.XtraBars.BarButtonItem brBtnPrint;

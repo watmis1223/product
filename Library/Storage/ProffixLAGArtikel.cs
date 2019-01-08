@@ -11,7 +11,7 @@ namespace ProductCalculation.Library.Storage
 {
     static partial class StorageOperator
     {
-        static void SaveLAG_Artikel(CalculationModel model)
+        static void SaveLAG_Artikel(CalculationModel model, decimal defaultValue = -1)
         {
             //save or update
             //update value 
@@ -24,7 +24,15 @@ namespace ProductCalculation.Library.Storage
 
             //scale calculation note id start from 1
             dr["ArtikelNrLAG"] = model.ProffixModel.LAGDokumenteArtikelNrLAG;
-            dr["Verkauf5"] = model.CalculationNotes[1].CalculationItems.Where(item => item.Tag == "VK(liste)").FirstOrDefault().Total;
+
+            if (defaultValue > -1)
+            {
+                dr["Verkauf5"] = defaultValue;
+            }
+            else
+            {
+                dr["Verkauf5"] = model.CalculationNotes[1].CalculationItems.Where(item => item.Tag == "VK(liste)").FirstOrDefault().Total;
+            }
 
             //update proffix
             UpdateRow(

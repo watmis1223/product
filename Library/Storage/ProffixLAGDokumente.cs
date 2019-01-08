@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -15,14 +16,21 @@ namespace ProductCalculation.Library.Storage
 
         static void SaveLAG_Dokumente(CalculationModel model)
         {
-            if (model.ProffixModel.Command == Global.Commands.New ||
-                model.ProffixModel.Command == Global.Commands.Copy)
+            if (model.IsDelete)
             {
-                InsertLAG_Dokumente(model);
+                DeleteLAG_DokumenteByID(model);
             }
             else
             {
-                UpdateLAG_Dokumente(model);
+                if (model.ProffixModel.Command == Global.Commands.New ||
+                model.ProffixModel.Command == Global.Commands.Copy)
+                {
+                    InsertLAG_Dokumente(model);
+                }
+                else
+                {
+                    UpdateLAG_Dokumente(model);
+                }
             }
         }
 
@@ -195,6 +203,36 @@ namespace ProductCalculation.Library.Storage
             }
 
             return model;
+        }
+
+        public static void DeleteLAG_DokumenteByID(CalculationModel model)
+        {
+            if (model == null)
+            {
+                return;
+            }
+
+            if (model.ProffixModel == null)
+            {
+                return;
+            }
+
+            StringBuilder queryValues = new StringBuilder();
+
+            using (SqlConnection connection = new SqlConnection(model.ProffixConnection))
+            {
+                ///building columns
+                queryValues.AppendFormat("delete [{0}] ", _LAG_Dokumente);
+                queryValues.AppendFormat("where [LaufNr] = {0}", model.ProffixModel.LAGDokumenteLaufNr);
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+                connection.Open();
+                cmd.CommandText = queryValues.ToString();
+                cmd.ExecuteNonQuery();
+                connection.Close();
+                cmd.Dispose();
+            }
         }
     }
 }

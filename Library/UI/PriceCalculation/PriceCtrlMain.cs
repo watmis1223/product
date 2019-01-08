@@ -53,6 +53,16 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             return calculationBasicCtrl1.GetModel();
         }
 
+        public CalculationModel GetCalculationModelWithUpdateGeneralSettings()
+        {
+            if (generalCtrl1 != null)
+            {
+                generalCtrl1.UpdateModel();
+            }
+
+            return calculationBasicCtrl1.GetModel(generalCtrl1.GetModel());
+        }
+
         public void NewCalculation()
         {
             if (generalCtrl1 != null)
@@ -70,8 +80,20 @@ namespace ProductCalculation.Library.UI.PriceCalculation
 
             if (calculationBasicCtrl1 != null)
             {
-
                 calculationBasicCtrl1.SaveModel(generalCtrl1.GetModel());
+            }
+        }
+
+        public void DeleteCalculation()
+        {
+            if (generalCtrl1 != null)
+            {
+                generalCtrl1.UpdateModel();
+            }
+
+            if (calculationBasicCtrl1 != null)
+            {
+                calculationBasicCtrl1.DeleteModel(generalCtrl1.GetModel());
             }
         }
 

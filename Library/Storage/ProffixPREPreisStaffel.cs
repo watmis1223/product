@@ -15,7 +15,7 @@ namespace ProductCalculation.Library.Storage
         static string _PRE_PreisStaffel = "PRE_PreisStaffel";
 
         static void SavePRE_PreisStaffel(CalculationModel model)
-        {
+        {            
             if (model == null)
             {
                 return;
@@ -34,6 +34,13 @@ namespace ProductCalculation.Library.Storage
             //for scale, notes should more than 2
             if (model.CalculationNotes.Count == 2)
             {
+                return;
+            }
+
+            if (model.IsDelete)
+            {
+                //delete existing first
+                DeletePREPreisStaffelByProductID(model.ProffixModel.LAGDokumenteArtikelNrLAG, model.ProffixConnection);
                 return;
             }
 
