@@ -365,6 +365,13 @@ namespace ProductCalculation.Library.Storage
 
                 //SaveTable()
 
+                string sActive = "N";
+                try
+                {
+                    sActive = model.GeneralSetting.Options.Contains("A") ? "Y" : "N";
+                }
+                catch { }
+
                 foreach (CalculationNoteModel note in scaleNotes)
                 {
                     DataRow dr = dt.NewRow();
@@ -418,11 +425,7 @@ namespace ProductCalculation.Library.Storage
                     dr["Bruttoverkaufspreis"] = RoundDown(note.CalculationItems.Where(item => item.Tag == "VK(brutto)").FirstOrDefault().Total, 4); //VK(brutto)
                     dr["Deckungsbeitrag"] = RoundDown(GetMarginSummarize(note), 4);
 
-                    try
-                    {
-                        dr["ISACTIVE"] = model.GeneralSetting.Options.Contains("A") ? "Y" : "N";
-                    }
-                    catch { }
+                    dr["ISACTIVE"] = sActive;
                 }
 
                 SaveTable(dt, dt.Columns["PriceDetailID"], new DataColumn[] { dt.Columns["PriceDetailID"] });

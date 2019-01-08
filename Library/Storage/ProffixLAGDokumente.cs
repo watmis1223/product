@@ -142,7 +142,7 @@ namespace ProductCalculation.Library.Storage
             //dr["Datum"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
             dr["Datum"] = "CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))";
             //CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))
-            dr["DokGruppe"] = "Kalkulationen";
+            dr["DokGruppe"] = "Neue Kalkulationen";
             dr["DokumentNrLAG"] = dr["LaufNr"]; //String.Format("(select max([LaufNr]) + 1 from {0})", _LAG_Dokumente);
             //dr["Drucken"] = DBNull.Value;
             dr["Modul"] = model.ProffixModel.AppPath;
