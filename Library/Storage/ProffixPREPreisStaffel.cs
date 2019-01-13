@@ -15,7 +15,7 @@ namespace ProductCalculation.Library.Storage
         static string _PRE_PreisStaffel = "PRE_PreisStaffel";
 
         static void SavePRE_PreisStaffel(CalculationModel model)
-        {            
+        {
             if (model == null)
             {
                 return;
@@ -120,7 +120,6 @@ namespace ProductCalculation.Library.Storage
 
                 dr["Geaendert"] = 1;
                 dr["Exportiert"] = 0;
-
             }
 
             //delete existing first
@@ -128,6 +127,26 @@ namespace ProductCalculation.Library.Storage
 
             //save data
             SaveTable(dt, dt.Columns["LaufNr"], null, connectionString: model.ProffixConnection);
+
+            //update ,[BewBasis] ,[Bewertung] to [LAG_Artikel] by first scale item
+            if (dt != null && dt.Rows != null)
+            {
+                if (dt.Rows.Count > 0)
+                {
+                    DataRow drFirst = dt.Rows[0];
+                    if (drFirst != null)
+                    {
+                        try
+                        {
+                            SaveLAG_ArtikelBewertung(
+                                model.ProffixModel.LAGDokumenteArtikelNrLAG,
+                                Convert.ToDecimal(drFirst["Wert"].ToString()),
+                                model.ProffixConnection);
+                        }
+                        catch { }
+                    }
+                }
+            }
         }
 
         static void DeletePREPreisStaffelByProductID(string productID, string connectionString)

@@ -141,7 +141,8 @@ namespace ProductCalculation.Library.Storage
             string sBezeichnung = String.Concat(
                 "Kalk. ",
                 model.GeneralSetting.CostType == "S" ? "VP " : "EP ",
-                DateTime.Now.ToString("M/d/yy", oCulture),
+                //DateTime.Now.ToString("M/d/yy", oCulture),
+                DateTime.Now.ToString("dd/MM/yyyy", oCulture),
                 model.GeneralSetting.Options.Contains("A") ? " Aktiv" : " ",
                 model.GeneralSetting.Supplier);
             dr["Bezeichnung"] = sBezeichnung.Length > 100 ? sBezeichnung.Substring(0, 100) : sBezeichnung;

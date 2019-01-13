@@ -43,5 +43,33 @@ namespace ProductCalculation.Library.Storage
                 },
                 connectionString: model.ProffixConnection);
         }
+
+        static void SaveLAG_ArtikelBewertung(string ArtikelNrLAG, decimal amout, string connectionString)
+        {
+            //save or update
+            //update value 
+            DataTable dt = new DataTable();
+            dt.TableName = "LAG_Artikel";
+            dt.Columns.Add(new DataColumn("ArtikelNrLAG", typeof(string)));
+            dt.Columns.Add(new DataColumn("BewBasis", typeof(Int16)));
+            dt.Columns.Add(new DataColumn("Bewertung", typeof(float)));
+            DataRow dr = dt.NewRow();
+            dt.Rows.Add(dr);
+
+            //scale calculation note id start from 1
+            dr["ArtikelNrLAG"] = ArtikelNrLAG;
+            dr["BewBasis"] = 6; //Kalkulationspreis
+            dr["Bewertung"] = amout;
+
+            //update proffix
+            UpdateRow(
+                dr,
+                dt.Columns["ArtikelNrLAG"],
+                new List<DataColumn>() {
+                    dt.Columns["BewBasis"],
+                    dt.Columns["Bewertung"]
+                },
+                connectionString: connectionString);
+        }
     }
 }

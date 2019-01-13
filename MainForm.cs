@@ -284,13 +284,13 @@ namespace ProductCalculation
                 if (model.GeneralSetting.Options.Contains("A"))
                 {
                     //not allow to delete
-                    MessageBox.Show("KALKULATION KANN NICHT GELÖSCHT WERDEN, DA AKTIV. BITTE ZUERST INAKTIV SETZEN!", 
+                    MessageBox.Show("CALCULATION CAN NOT DELETED BECAUSE IS ACTIVE, SET INACTIVE FIRST", 
                         "Delete Calculation", MessageBoxButtons.OK);
                 }
                 else
                 {
                     //allow to delete if not active
-                    if (MessageBox.Show("WOLLEN SIE DIE KALKULATION LÖSCHEN?", 
+                    if (MessageBox.Show("DO YOU WANT DELETE THE CALCULATION?", 
                         "Delete Calculation", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         _IsDeleteMode = true;
