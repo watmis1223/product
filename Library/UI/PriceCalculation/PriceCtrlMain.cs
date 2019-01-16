@@ -53,6 +53,13 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             return calculationBasicCtrl1.GetModel();
         }
 
+        public CalculationModel GetCalculationModelAndRefreshAmount()
+        {
+            calculationBasicCtrl1.UpdateAllScalePrices();
+
+            return calculationBasicCtrl1.GetModel();
+        }
+
         public CalculationModel GetCalculationModelWithUpdateGeneralSettings()
         {
             if (generalCtrl1 != null)

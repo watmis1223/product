@@ -293,6 +293,32 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             RefreshGridMargin();
         }
 
+        public void UpdateAllScalePrices()
+        {
+            try
+            {
+                List<ComboboxItemModel> oItems = (List<ComboboxItemModel>)cboPriceScales.Properties.DataSource;
+
+                for (int i = 1; i < oItems.Count; i++)
+                {
+                    //remove scale items if needed
+                    _Model.CalculationViewItems.RemoveAll(item => item.Group > 3);
+
+                    // add price-scale calculation item to gridview
+                    _Model.CalculationViewItems.AddRange(_Model.CalculationNotes[i].CalculationItems);
+
+                    _Calculation.UpdateGroupAmountAll(_Model, false);
+
+                    if (_Model.GeneralSetting.Options.Contains("M"))
+                    {
+                        //calculate margin
+                        _MarginCalculation.UpdateBaseAmountAll(_Model);
+                    }
+                }
+            }
+            catch { }
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             //save model to db

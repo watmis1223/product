@@ -66,11 +66,12 @@ namespace ProductCalculation
             _PriceModule.Dock = DockStyle.Fill;
             _CopyModule.Dock = DockStyle.Fill;
             _SettingModule.Dock = DockStyle.Fill;
-
+           
             brBtnCopy.Enabled = false;
             brBtnNew.Enabled = false;
             brBtnSave.Enabled = false;
             brBtnDelete.Enabled = false;
+            brBtnPrint.Enabled = false;
 
             CallByProffix(_Args);
         }
@@ -125,6 +126,7 @@ namespace ProductCalculation
                         brBtnNew.Enabled = false;
                         brBtnSave.Enabled = true;
                         brBtnDelete.Enabled = true;
+                        brBtnPrint.Enabled = true;
                     }
                     else if (sCmdParam.Length == 2)
                     {
@@ -132,6 +134,7 @@ namespace ProductCalculation
                         brBtnCopy.Enabled = false;
                         brBtnNew.Enabled = true; ;
                         brBtnSave.Enabled = false;
+                        brBtnPrint.Enabled = false;
                     }
                 }
                 else if (_Args[1].StartsWith("copy"))
@@ -142,6 +145,7 @@ namespace ProductCalculation
                     brBtnCopy.Enabled = false;
                     brBtnNew.Enabled = false;
                     brBtnSave.Enabled = true;
+                    brBtnPrint.Enabled = false;
                 }
 
                 ShowModule(ApplicationModules.PriceModuleCalculationByProffix, new string[] { _Args[0], _Args[1] });
@@ -177,6 +181,7 @@ namespace ProductCalculation
             brBtnNew.Enabled = false;
             brBtnSave.Enabled = false;
             brBtnDelete.Enabled = false;
+            brBtnPrint.Enabled = false;
         }
 
         private void brBtnCopy_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -187,6 +192,7 @@ namespace ProductCalculation
             brBtnNew.Enabled = false;
             brBtnSave.Enabled = false;
             brBtnDelete.Enabled = false;
+            brBtnPrint.Enabled = false;
         }
 
         private void brBtnNew_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -205,7 +211,8 @@ namespace ProductCalculation
             brBtnCopy.Enabled = false;
             brBtnNew.Enabled = false;
             brBtnSave.Enabled = true;
-            brBtnDelete.Enabled = true;
+            //brBtnDelete.Enabled = true;
+            //brBtnPrint.Enabled = true;
         }
 
         private void _PriceModule_Saved(string message)
@@ -219,6 +226,9 @@ namespace ProductCalculation
                 _IsDeleteMode = false;
                 Application.Exit();
             }
+
+            brBtnPrint.Enabled = true;
+            brBtnDelete.Enabled = true;            
         }
 
         private void _SettingModule_SaveChanged(string message)
@@ -242,8 +252,11 @@ namespace ProductCalculation
         private void brBtnPrint_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             //get calculation model
-            CalculationModel model = _PriceModule.GetCalculationModel();
+            CalculationModel model = _PriceModule.GetCalculationModelAndRefreshAmount();
             PriceCalculationSetting setting = _SettingModule.GetModel();
+
+            //refresh data           
+
             //save to pdf
             if (model != null && setting != null)
             {

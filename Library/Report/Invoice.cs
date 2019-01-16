@@ -67,8 +67,16 @@ namespace ProductCalculation.Library.Entity.Report
             //    _ReportID = string.Format("Kalkulation_{0}.pdf", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
             //}
 
-            _ReportHeader = string.Format("Kalkulation {0}", DateTime.Now.ToString("yyyyMMdd HHmmss"));
-            _ReportID = string.Format("Kalkulation_{0}.pdf", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+            if (String.IsNullOrWhiteSpace(_Model.ReportHeader))
+            {
+                _Model.ReportHeader = string.Format("Kalkulation {0}", DateTime.Now.ToString("yyyyMMdd HHmmss"));
+            }
+            if (String.IsNullOrWhiteSpace(_Model.ReportID))
+            {
+                _Model.ReportID = string.Format("Kalkulation_{0}.pdf", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+            }
+            _ReportHeader = _Model.ReportHeader;
+            _ReportID = _Model.ReportID;
 
 
             CreateDocument();

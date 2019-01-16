@@ -71,5 +71,30 @@ namespace ProductCalculation.Library.Storage
                 },
                 connectionString: connectionString);
         }
+
+        static void SaveLAG_ArtikelVerkauf5(string ArtikelNrLAG, decimal amout, string connectionString)
+        {
+            //save or update
+            //update value 
+            DataTable dt = new DataTable();
+            dt.TableName = "LAG_Artikel";
+            dt.Columns.Add(new DataColumn("ArtikelNrLAG", typeof(string)));            
+            dt.Columns.Add(new DataColumn("Verkauf5", typeof(float)));
+            DataRow dr = dt.NewRow();
+            dt.Rows.Add(dr);
+
+            //scale calculation note id start from 1
+            dr["ArtikelNrLAG"] = ArtikelNrLAG;            
+            dr["Verkauf5"] = amout;
+
+            //update proffix
+            UpdateRow(
+                dr,
+                dt.Columns["ArtikelNrLAG"],
+                new List<DataColumn>() {
+                    dt.Columns["Verkauf5"]
+                },
+                connectionString: connectionString);
+        }
     }
 }

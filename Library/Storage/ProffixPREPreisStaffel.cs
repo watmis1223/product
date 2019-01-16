@@ -138,7 +138,7 @@ namespace ProductCalculation.Library.Storage
                     {
                         try
                         {
-                            SaveLAG_ArtikelBewertung(
+                            SaveLAG_ArtikelVerkauf5(
                                 model.ProffixModel.LAGDokumenteArtikelNrLAG,
                                 Convert.ToDecimal(drFirst["Wert"].ToString()),
                                 model.ProffixConnection);

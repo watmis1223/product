@@ -537,6 +537,9 @@ namespace ProductCalculation.Library.Entity.PriceCalculation.Models
 
         public bool IsDelete { get; set; }
 
+        public string ReportHeader { get; set; }
+        public string ReportID { get; set; }
+
         public override string ToString()
         {
             return DateTime.Now.ToString();

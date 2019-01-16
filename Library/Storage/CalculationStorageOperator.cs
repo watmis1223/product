@@ -219,6 +219,16 @@ namespace ProductCalculation.Library.Storage
                 }
                 catch { }
 
+                //set report name
+                if (String.IsNullOrWhiteSpace(model.ReportHeader))
+                {
+                    model.ReportHeader = string.Format("Kalkulation {0}", DateTime.Now.ToString("yyyyMMdd HHmmss"));
+                }
+                if (String.IsNullOrWhiteSpace(model.ReportID))
+                {
+                    model.ReportID = string.Format("Kalkulation_{0}.pdf", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+                }
+
 
                 //save proffix if needed
                 SaveProffix(model);
