@@ -270,14 +270,14 @@ namespace ProductCalculation.Library.Storage
             dt.Rows.Add(dr);
             dr["LaufNr"] = iLaufNr;
             dr["AdressNrADR"] = AdressNrADR;
-            dr["Bemerkungen"] = "Adress Kalkulation";            
+            dr["Bemerkungen"] = "Adress Kalkulation";
             dr["Bezeichnung"] = "Adress Kalkulation";
 
             dr["DateiName"] = String.Format("opena {0}", AdressNrADR);
             //dr["Datum"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
             dr["Datum"] = "CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))";
             dr["DokGruppe"] = "Neue Kalkulationen";
-            dr["DokumentNrADR"] = String.Format("$(select max(DokumentNrADR) + 1 from {0})", _ADR_Dokumente);
+            dr["DokumentNrADR"] = String.Format("(select max(DokumentNrADR) + 1 from {0})", _ADR_Dokumente);
             //dr["LaufNr"];//String.Format("(select max([LaufNr]) + 1 from {0})", _ADR_Dokumente);
             //dr["KontaktNrADR"] = DBNull.Value;
             dr["Modul"] = appPath;
@@ -291,7 +291,7 @@ namespace ProductCalculation.Library.Storage
             dr["Exportiert"] = 0;
 
             InsertRowManualIncreaseID(dr, null, null,
-                (new List<DataColumn> { dt.Columns["Datum"], dt.Columns["ErstelltAm"] }).ToArray(),
+                (new List<DataColumn> { dt.Columns["Datum"], dt.Columns["DokumentNrADR"], dt.Columns["ErstelltAm"] }).ToArray(),
                 connectionString: connectionString);
         }
     }

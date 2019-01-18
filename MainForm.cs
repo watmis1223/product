@@ -66,7 +66,7 @@ namespace ProductCalculation
             _PriceModule.Dock = DockStyle.Fill;
             _CopyModule.Dock = DockStyle.Fill;
             _SettingModule.Dock = DockStyle.Fill;
-           
+
             brBtnCopy.Enabled = false;
             brBtnNew.Enabled = false;
             brBtnSave.Enabled = false;
@@ -217,7 +217,7 @@ namespace ProductCalculation
 
         private void _PriceModule_Saved(string message)
         {
-            _Args = null;            
+            _Args = null;
             MessageBox.Show(message, "Calculation", MessageBoxButtons.OK);
 
             if (_IsDeleteMode)
@@ -228,7 +228,7 @@ namespace ProductCalculation
             }
 
             brBtnPrint.Enabled = true;
-            brBtnDelete.Enabled = true;            
+            brBtnDelete.Enabled = true;
         }
 
         private void _SettingModule_SaveChanged(string message)
@@ -297,17 +297,107 @@ namespace ProductCalculation
                 if (model.GeneralSetting.Options.Contains("A"))
                 {
                     //not allow to delete
-                    MessageBox.Show("CALCULATION CAN NOT DELETED BECAUSE IS ACTIVE, SET INACTIVE FIRST", 
+                    MessageBox.Show("CALCULATION CAN NOT DELETED BECAUSE IS ACTIVE, SET INACTIVE FIRST",
                         "Delete Calculation", MessageBoxButtons.OK);
                 }
                 else
                 {
                     //allow to delete if not active
-                    if (MessageBox.Show("DO YOU WANT DELETE THE CALCULATION?", 
+                    if (MessageBox.Show("DO YOU WANT DELETE THE CALCULATION?",
                         "Delete Calculation", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         _IsDeleteMode = true;
                         _PriceModule.DeleteCalculation();
+                    }
+                }
+            }
+        }
+
+        private void brBtnShortCutOpena_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            PriceCalculationSetting setting = _SettingModule.GetModel();
+            string sAppPath = Application.ExecutablePath;
+
+            if (setting != null)
+            {
+                pnlMain.Controls.Clear();
+                marqueeProgressBarControl1.Properties.ShowTitle = true;
+                marqueeProgressBarControl1.Left = (pnlMain.ClientSize.Width - marqueeProgressBarControl1.Width) / 2;
+                marqueeProgressBarControl1.Top = (pnlMain.ClientSize.Height - marqueeProgressBarControl1.Height) / 2;
+                pnlMain.Controls.Add(marqueeProgressBarControl1);
+
+                DataTable dt = StorageOperator.LoadProffixADRAdressen(setting.ProffixConnection);
+                pnlMain.Controls.Clear();
+
+                if (dt != null)
+                {
+                    // Initializing progress bar properties
+                    progressBarControl1.Left = (pnlMain.ClientSize.Width - progressBarControl1.Width) / 2;
+                    progressBarControl1.Top = (pnlMain.ClientSize.Height - progressBarControl1.Height) / 2;
+                    progressBarControl1.Properties.Step = 1;
+                    progressBarControl1.Properties.PercentView = true;
+                    progressBarControl1.Properties.ShowTitle = true;
+                    progressBarControl1.Properties.Maximum = dt.Rows.Count;
+                    progressBarControl1.Properties.Minimum = 0;
+                    pnlMain.Controls.Add(progressBarControl1);
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        StorageOperator.InsertADR_DokumenteShortCut(dr["AdressNrADR"].ToString(), sAppPath, setting.ProffixConnection);
+                        progressBarControl1.PerformStep();
+                        progressBarControl1.Update();
+                    }
+
+                    pnlMain.Controls.Clear();
+                    if (MessageBox.Show("Create short-cut success, application will close",
+                        "Create Short-cut", MessageBoxButtons.OK) == DialogResult.OK)
+                    {
+                        Application.Exit();
+                    }
+                }
+            }
+        }
+
+        private void btBtnShortCutOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            PriceCalculationSetting setting = _SettingModule.GetModel();
+            string sAppPath = Application.ExecutablePath;
+
+            if (setting != null)
+            {
+                pnlMain.Controls.Clear();
+                marqueeProgressBarControl1.Properties.ShowTitle = true;
+                marqueeProgressBarControl1.Left = (pnlMain.ClientSize.Width - marqueeProgressBarControl1.Width) / 2;
+                marqueeProgressBarControl1.Top = (pnlMain.ClientSize.Height - marqueeProgressBarControl1.Height) / 2;
+                pnlMain.Controls.Add(marqueeProgressBarControl1);
+
+                DataTable dt = StorageOperator.LoadProffixLAGArtikel(setting.ProffixConnection);
+                pnlMain.Controls.Clear();
+
+                if (dt != null)
+                {
+                    // Initializing progress bar properties
+                    progressBarControl1.Left = (pnlMain.ClientSize.Width - progressBarControl1.Width) / 2;
+                    progressBarControl1.Top = (pnlMain.ClientSize.Height - progressBarControl1.Height) / 2;
+                    progressBarControl1.Properties.Step = 1;
+                    progressBarControl1.Properties.PercentView = true;
+                    progressBarControl1.Properties.ShowTitle = true;
+                    progressBarControl1.Properties.Maximum = dt.Rows.Count;
+                    progressBarControl1.Properties.Minimum = 0;
+                    pnlMain.Controls.Add(progressBarControl1);
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        StorageOperator.InsertLAG_DokumenteShortCut(dr["ArtikelNrLAG"].ToString(), sAppPath, setting.ProffixConnection);
+                        progressBarControl1.PerformStep();
+                        progressBarControl1.Update();
+                    }
+
+                    pnlMain.Controls.Clear();
+                    if (MessageBox.Show("Create short-cut success, application will close",
+                        "Create Short-cut", MessageBoxButtons.OK) == DialogResult.OK)
+                    {
+                        Application.Exit();
                     }
                 }
             }

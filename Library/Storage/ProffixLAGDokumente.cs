@@ -281,7 +281,7 @@ namespace ProductCalculation.Library.Storage
             dr["Datum"] = "CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))";
             //CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))
             dr["DokGruppe"] = "Neue Kalkulationen";
-            dr["DokumentNrLAG"] = String.Format("$(select max(DokumentNrLAG) + 1 from {0})", _LAG_Dokumente);
+            dr["DokumentNrLAG"] = String.Format("(select max(DokumentNrLAG) + 1 from {0})", _LAG_Dokumente);
             //dr["LaufNr"]; //String.Format("(select max([LaufNr]) + 1 from {0})", _LAG_Dokumente);
             //dr["Drucken"] = DBNull.Value;
             dr["Modul"] = appPath;

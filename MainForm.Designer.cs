@@ -36,12 +36,20 @@
             this.brBtnSave = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnPrint = new DevExpress.XtraBars.BarButtonItem();
             this.brBtnDelete = new DevExpress.XtraBars.BarButtonItem();
+            this.brBtnShortCutOpena = new DevExpress.XtraBars.BarButtonItem();
+            this.btBtnShortCutOpen = new DevExpress.XtraBars.BarButtonItem();
             this.ribbonPage1 = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonPageGroup1 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.pnlMain = new DevExpress.XtraEditors.PanelControl();
+            this.progressBarControl1 = new DevExpress.XtraEditors.ProgressBarControl();
+            this.marqueeProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlMain)).BeginInit();
+            this.pnlMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // ribbonControl1
@@ -55,9 +63,11 @@
             this.brBtnNew,
             this.brBtnSave,
             this.brBtnPrint,
-            this.brBtnDelete});
+            this.brBtnDelete,
+            this.brBtnShortCutOpena,
+            this.btBtnShortCutOpen});
             this.ribbonControl1.Location = new System.Drawing.Point(0, 0);
-            this.ribbonControl1.MaxItemId = 14;
+            this.ribbonControl1.MaxItemId = 17;
             this.ribbonControl1.Name = "ribbonControl1";
             this.ribbonControl1.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonPage1});
@@ -134,11 +144,30 @@
             this.brBtnDelete.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             this.brBtnDelete.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnDelete_ItemClick);
             // 
+            // brBtnShortCutOpena
+            // 
+            this.brBtnShortCutOpena.Caption = "Shortcut für Adressen hinzufügen";
+            this.brBtnShortCutOpena.Id = 14;
+            this.brBtnShortCutOpena.ImageOptions.Image = global::ProductCalculation.Properties.Resources.undo_32x32;
+            this.brBtnShortCutOpena.Name = "brBtnShortCutOpena";
+            this.brBtnShortCutOpena.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.brBtnShortCutOpena.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.brBtnShortCutOpena_ItemClick);
+            // 
+            // btBtnShortCutOpen
+            // 
+            this.btBtnShortCutOpen.Caption = "Shortcut für Artikel hinzufügen";
+            this.btBtnShortCutOpen.Id = 15;
+            this.btBtnShortCutOpen.ImageOptions.Image = global::ProductCalculation.Properties.Resources.undo_32x321;
+            this.btBtnShortCutOpen.Name = "btBtnShortCutOpen";
+            this.btBtnShortCutOpen.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
+            this.btBtnShortCutOpen.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btBtnShortCutOpen_ItemClick);
+            // 
             // ribbonPage1
             // 
             this.ribbonPage1.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
             this.ribbonPageGroup1,
-            this.ribbonPageGroup2});
+            this.ribbonPageGroup2,
+            this.ribbonPageGroup3});
             this.ribbonPage1.Name = "ribbonPage1";
             this.ribbonPage1.Text = "Module";
             // 
@@ -157,14 +186,39 @@
             this.ribbonPageGroup2.ItemLinks.Add(this.brBtnSave);
             this.ribbonPageGroup2.Name = "ribbonPageGroup2";
             // 
+            // ribbonPageGroup3
+            // 
+            this.ribbonPageGroup3.ItemLinks.Add(this.brBtnShortCutOpena);
+            this.ribbonPageGroup3.ItemLinks.Add(this.btBtnShortCutOpen);
+            this.ribbonPageGroup3.Name = "ribbonPageGroup3";
+            // 
             // pnlMain
             // 
             this.pnlMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.pnlMain.Controls.Add(this.marqueeProgressBarControl1);
+            this.pnlMain.Controls.Add(this.progressBarControl1);
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMain.Location = new System.Drawing.Point(0, 281);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(1748, 1036);
             this.pnlMain.TabIndex = 1;
+            // 
+            // progressBarControl1
+            // 
+            this.progressBarControl1.Location = new System.Drawing.Point(504, 411);
+            this.progressBarControl1.MenuManager = this.ribbonControl1;
+            this.progressBarControl1.Name = "progressBarControl1";
+            this.progressBarControl1.Size = new System.Drawing.Size(718, 64);
+            this.progressBarControl1.TabIndex = 0;
+            // 
+            // marqueeProgressBarControl1
+            // 
+            this.marqueeProgressBarControl1.EditValue = "Loading";
+            this.marqueeProgressBarControl1.Location = new System.Drawing.Point(504, 490);
+            this.marqueeProgressBarControl1.MenuManager = this.ribbonControl1;
+            this.marqueeProgressBarControl1.Name = "marqueeProgressBarControl1";
+            this.marqueeProgressBarControl1.Size = new System.Drawing.Size(718, 64);
+            this.marqueeProgressBarControl1.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -184,6 +238,9 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlMain)).EndInit();
+            this.pnlMain.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -202,5 +259,10 @@
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
         private DevExpress.XtraBars.BarButtonItem brBtnSave;
         private DevExpress.XtraBars.BarButtonItem brBtnPrint;
+        private DevExpress.XtraBars.BarButtonItem brBtnShortCutOpena;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup3;
+        private DevExpress.XtraBars.BarButtonItem btBtnShortCutOpen;
+        private DevExpress.XtraEditors.ProgressBarControl progressBarControl1;
+        private DevExpress.XtraEditors.MarqueeProgressBarControl marqueeProgressBarControl1;
     }
 }
