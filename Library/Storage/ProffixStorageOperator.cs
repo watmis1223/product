@@ -407,5 +407,39 @@ namespace ProductCalculation.Library.Storage
 
             return modelList;
         }
+
+        public static DataTable LoadProffixLAGArtikel(string connectionString)
+        {            
+            if (String.IsNullOrWhiteSpace(connectionString))
+            {
+                return null;
+            }
+
+            DataColumn[] oSelect = {
+                new DataColumn("LaufNr", typeof(Int32)),
+                new DataColumn("ArtikelNrLAG", typeof(string)),
+            };
+
+            DataTable dt = LoadTable("LAG_Artikel", oSelect, null, null, connectionString: connectionString);
+
+            return dt;
+        }
+
+        public static DataTable LoadProffixADRAdressen(string connectionString)
+        {
+            if (String.IsNullOrWhiteSpace(connectionString))
+            {
+                return null;
+            }
+
+            DataColumn[] oSelect = {
+                new DataColumn("LaufNr", typeof(Int32)),
+                new DataColumn("AdressNrADR", typeof(Int32)),
+            };
+
+            DataTable dt = LoadTable("ADR_Adressen", oSelect, null, null, connectionString: connectionString);
+
+            return dt;
+        }        
     }
 }

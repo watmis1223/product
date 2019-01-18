@@ -235,5 +235,68 @@ namespace ProductCalculation.Library.Storage
                 cmd.Dispose();
             }
         }
+
+        public static void InsertLAG_DokumenteShortCut(string ArtikelNrLAG, string appPath, string connectionString)
+        {
+            if (String.IsNullOrWhiteSpace(ArtikelNrLAG))
+            {
+                return;
+            }
+
+            CultureInfo oCulture = new CultureInfo("en-US");
+            DateTime oNow = DateTime.Now;
+
+            //get running no.
+            int iLaufNr = GetDocumentNumber(_LAG_Dokumente, connectionString);
+
+            DataTable dt = new DataTable();
+            dt.TableName = _LAG_Dokumente;
+            dt.Columns.Add(new DataColumn("LaufNr", typeof(Int32))); //40346 (running no.)
+            dt.Columns.Add(new DataColumn("ArtikelNrLAG", typeof(string))); //215048067
+            dt.Columns.Add(new DataColumn("Bemerkungen", typeof(string))); //Erstellt eine neue Kalkulation
+            dt.Columns.Add(new DataColumn("Bezeichnung", typeof(string))); //Kalk. VP 12/3/18 
+            dt.Columns.Add(new DataColumn("DateiName", typeof(string))); //open 215048067 53576
+            dt.Columns.Add(new DataColumn("Datum", typeof(string))); //2018-10-21 00:00:00.000
+            dt.Columns.Add(new DataColumn("DokGruppe", typeof(string))); //Kalkulationen
+            dt.Columns.Add(new DataColumn("DokumentNrLAG", typeof(string))); //40346
+            //dt.Columns.Add(new DataColumn("Drucken", typeof(Int16))); //NULL
+            dt.Columns.Add(new DataColumn("Modul", typeof(string))); //C:\Program Files (x86)\PROFFIX\CalcModule\calc.exe            
+            dt.Columns.Add(new DataColumn("ImportNr", typeof(Int32))); //0
+            dt.Columns.Add(new DataColumn("ErstelltAm", typeof(string))); //2018-10-21 00:00:00.000
+            dt.Columns.Add(new DataColumn("ErstelltVon", typeof(string))); //System (employee)
+            //dt.Columns.Add(new DataColumn("GeaendertAm", typeof(string))); //NULL
+            //dt.Columns.Add(new DataColumn("GeaendertVon", typeof(string))); //NULL
+            dt.Columns.Add(new DataColumn("Geaendert", typeof(Int16))); //0
+            dt.Columns.Add(new DataColumn("Exportiert", typeof(Int16))); //0
+
+            DataRow dr = dt.NewRow();
+            dt.Rows.Add(dr);
+            dr["LaufNr"] = iLaufNr;
+            dr["ArtikelNrLAG"] = ArtikelNrLAG;
+            dr["Bemerkungen"] = "Artikel Kalkulation";
+            dr["Bezeichnung"] = "Artikel Kalkulation";
+
+            dr["DateiName"] = String.Format("open {0}", ArtikelNrLAG);
+            //dr["Datum"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
+            dr["Datum"] = "CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))";
+            //CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))
+            dr["DokGruppe"] = "Neue Kalkulationen";
+            dr["DokumentNrLAG"] = String.Format("$(select max(DokumentNrLAG) + 1 from {0})", _LAG_Dokumente);
+            //dr["LaufNr"]; //String.Format("(select max([LaufNr]) + 1 from {0})", _LAG_Dokumente);
+            //dr["Drucken"] = DBNull.Value;
+            dr["Modul"] = appPath;
+            dr["ImportNr"] = 0;
+            //dr["ErstelltAm"] = oNow.ToString("yyyy-dd-MM 00:00:00.000", oCulture);
+            dr["ErstelltAm"] = "CONVERT(DATETIME, CONVERT(DATE, CURRENT_TIMESTAMP))";
+            dr["ErstelltVon"] = "KalApp";
+            //dr["GeaendertAm"] = DBNull.Value;
+            //dr["GeaendertVon"] = DBNull.Value;
+            dr["Geaendert"] = 0;
+            dr["Exportiert"] = 0;
+
+            InsertRowManualIncreaseID(dr, null, null,
+                (new List<DataColumn>() { dt.Columns["Datum"], dt.Columns["DokumentNrLAG"], dt.Columns["ErstelltAm"] }).ToArray(),
+                connectionString: connectionString);
+        }
     }
 }
