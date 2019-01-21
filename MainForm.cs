@@ -15,6 +15,7 @@ using System.Diagnostics;
 using ProductCalculation.Library.Entity.PriceCalculation.Models;
 using ProductCalculation.Library.Entity.Report;
 using ProductCalculation.Library.Entity.Setting.PriceCalculation;
+using System.Threading;
 
 namespace ProductCalculation
 {
@@ -27,6 +28,15 @@ namespace ProductCalculation
 
         //argument form prffix
         string[] _Args;
+
+        private delegate void LoadDataForShortCutDoneCallback(int rowCount);
+        private event LoadDataForShortCutDoneCallback LoadDataForShortCutDone;
+
+        private delegate void ShortCutCreateDoneCallback();
+        private event ShortCutCreateDoneCallback ShortCutCreateDone;
+
+        private delegate void PrepareCreateShortCutDoneCallback(string byID);
+        private event PrepareCreateShortCutDoneCallback PrepareCreateShortCutDone;
 
         public MainForm(string[] arguments = null)
         {
@@ -59,6 +69,11 @@ namespace ProductCalculation
 
             //_CopyModule
             _CopyModule.SaveChanged += _CopyModule_SaveChanged;
+
+            this.LoadDataForShortCutDone += MainForm_LoadDataForShortCutDone;
+            this.ShortCutCreateDone += MainForm_ShortCutCreateDone;
+            this.PrepareCreateShortCutDone += MainForm_PrepareCreateShortCutDone;
+
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -313,94 +328,136 @@ namespace ProductCalculation
             }
         }
 
-        private void brBtnShortCutOpena_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        DataTable LoadShortCutData(string proffixConnection, string byID = "ADR_Dokumente")
+        {
+            DataTable dt = new DataTable();
+
+            if (byID == "ADR_Dokumente")
+            {
+                dt = StorageOperator.LoadProffixADRAdressen(proffixConnection);
+            }
+            else
+            {
+                dt = StorageOperator.LoadProffixLAGArtikel(proffixConnection);
+            }
+
+            if (dt != null)
+            {
+                if (LoadDataForShortCutDone != null)
+                {
+                    LoadDataForShortCutDone(dt.Rows.Count);
+                }
+            }
+
+            return dt;
+        }
+
+        void DoCreateShortCut(string byID = "AdressNrADR")
         {
             PriceCalculationSetting setting = _SettingModule.GetModel();
             string sAppPath = Application.ExecutablePath;
 
             if (setting != null)
             {
-                pnlMain.Controls.Clear();
-                marqueeProgressBarControl1.Properties.ShowTitle = true;
-                marqueeProgressBarControl1.Left = (pnlMain.ClientSize.Width - marqueeProgressBarControl1.Width) / 2;
-                marqueeProgressBarControl1.Top = (pnlMain.ClientSize.Height - marqueeProgressBarControl1.Height) / 2;
-                pnlMain.Controls.Add(marqueeProgressBarControl1);
+                //pnlMain.Controls.Clear();
+                //marqueeProgressBarControl1.Properties.ShowTitle = true;
+                //marqueeProgressBarControl1.Left = (pnlMain.ClientSize.Width - marqueeProgressBarControl1.Width) / 2;
+                //marqueeProgressBarControl1.Top = (pnlMain.ClientSize.Height - marqueeProgressBarControl1.Height) / 2;
+                //pnlMain.Controls.Add(marqueeProgressBarControl1);
 
-                DataTable dt = StorageOperator.LoadProffixADRAdressen(setting.ProffixConnection);
-                pnlMain.Controls.Clear();
+                DataTable dt = LoadShortCutData(setting.ProffixConnection, byID: byID);
 
                 if (dt != null)
                 {
-                    // Initializing progress bar properties
-                    progressBarControl1.Left = (pnlMain.ClientSize.Width - progressBarControl1.Width) / 2;
-                    progressBarControl1.Top = (pnlMain.ClientSize.Height - progressBarControl1.Height) / 2;
-                    progressBarControl1.Properties.Step = 1;
-                    progressBarControl1.Properties.PercentView = true;
-                    progressBarControl1.Properties.ShowTitle = true;
-                    progressBarControl1.Properties.Maximum = dt.Rows.Count;
-                    progressBarControl1.Properties.Minimum = 0;
-                    pnlMain.Controls.Add(progressBarControl1);
-
-                    foreach (DataRow dr in dt.Rows)
+                    if (byID == "AdressNrADR")
                     {
-                        StorageOperator.InsertADR_DokumenteShortCut(dr["AdressNrADR"].ToString(), sAppPath, setting.ProffixConnection);
-                        progressBarControl1.PerformStep();
-                        progressBarControl1.Update();
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            StorageOperator.InsertADR_DokumenteShortCut(dr[byID].ToString(), sAppPath, setting.ProffixConnection);
+                            progressBarControl1.PerformStep();
+                            progressBarControl1.Update();
+                        }
                     }
-
-                    pnlMain.Controls.Clear();
-                    if (MessageBox.Show("Create short-cut success, application will close",
-                        "Create Short-cut", MessageBoxButtons.OK) == DialogResult.OK)
+                    else
                     {
-                        Application.Exit();
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            StorageOperator.InsertLAG_DokumenteShortCut(dr[byID].ToString(), sAppPath, setting.ProffixConnection);
+                            progressBarControl1.PerformStep();
+                            progressBarControl1.Update();
+                        }
                     }
                 }
             }
+
+            if (ShortCutCreateDone != null)
+            {
+                ShortCutCreateDone();
+            }
+        }
+
+        void PrepareCreateShortCut(string byID = "AdressNrADR")
+        {
+            pnlMain.Controls.Clear();
+            ribbonPageGroup1.Enabled = false;
+            ribbonPageGroup2.Enabled = false;
+            ribbonPageGroup3.Enabled = false;
+
+            if (PrepareCreateShortCutDone != null)
+            {
+                PrepareCreateShortCutDone(byID);
+            }
+        }
+
+        private void MainForm_LoadDataForShortCutDone(int rowCount)
+        {
+            // Initializing progress bar properties
+            pnlMain.Controls.Clear();
+            progressBarControl1.Left = (pnlMain.ClientSize.Width - progressBarControl1.Width) / 2;
+            progressBarControl1.Top = (pnlMain.ClientSize.Height - progressBarControl1.Height) / 2;
+            progressBarControl1.Properties.Step = 1;
+            progressBarControl1.Properties.PercentView = true;
+            progressBarControl1.Properties.ShowTitle = true;
+            progressBarControl1.Properties.Maximum = rowCount;
+            progressBarControl1.Properties.Minimum = 0;
+            pnlMain.Controls.Add(progressBarControl1);
+        }
+
+        private void MainForm_ShortCutCreateDone()
+        {
+            pnlMain.Controls.Clear();
+            if (MessageBox.Show("Create short-cut success, application will close",
+                "Create Short-cut", MessageBoxButtons.OK) == DialogResult.OK)
+            {
+                Application.Exit();
+            }
+        }        
+
+        private void MainForm_PrepareCreateShortCutDone(string byID)
+        {
+            DoCreateShortCut(byID: byID);
+        }
+
+        private void brBtnShortCutOpena_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            if (MessageBox.Show("Create calculation short-cut, continue?",
+                        "Create Short-cut", MessageBoxButtons.YesNo) == DialogResult.No)
+            {
+                return;
+            }
+
+            PrepareCreateShortCut();
         }
 
         private void btBtnShortCutOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            PriceCalculationSetting setting = _SettingModule.GetModel();
-            string sAppPath = Application.ExecutablePath;
-
-            if (setting != null)
+            if (MessageBox.Show("Create calculation short-cut, continue?",
+                        "Create Short-cut", MessageBoxButtons.YesNo) == DialogResult.No)
             {
-                pnlMain.Controls.Clear();
-                marqueeProgressBarControl1.Properties.ShowTitle = true;
-                marqueeProgressBarControl1.Left = (pnlMain.ClientSize.Width - marqueeProgressBarControl1.Width) / 2;
-                marqueeProgressBarControl1.Top = (pnlMain.ClientSize.Height - marqueeProgressBarControl1.Height) / 2;
-                pnlMain.Controls.Add(marqueeProgressBarControl1);
-
-                DataTable dt = StorageOperator.LoadProffixLAGArtikel(setting.ProffixConnection);
-                pnlMain.Controls.Clear();
-
-                if (dt != null)
-                {
-                    // Initializing progress bar properties
-                    progressBarControl1.Left = (pnlMain.ClientSize.Width - progressBarControl1.Width) / 2;
-                    progressBarControl1.Top = (pnlMain.ClientSize.Height - progressBarControl1.Height) / 2;
-                    progressBarControl1.Properties.Step = 1;
-                    progressBarControl1.Properties.PercentView = true;
-                    progressBarControl1.Properties.ShowTitle = true;
-                    progressBarControl1.Properties.Maximum = dt.Rows.Count;
-                    progressBarControl1.Properties.Minimum = 0;
-                    pnlMain.Controls.Add(progressBarControl1);
-
-                    foreach (DataRow dr in dt.Rows)
-                    {
-                        StorageOperator.InsertLAG_DokumenteShortCut(dr["ArtikelNrLAG"].ToString(), sAppPath, setting.ProffixConnection);
-                        progressBarControl1.PerformStep();
-                        progressBarControl1.Update();
-                    }
-
-                    pnlMain.Controls.Clear();
-                    if (MessageBox.Show("Create short-cut success, application will close",
-                        "Create Short-cut", MessageBoxButtons.OK) == DialogResult.OK)
-                    {
-                        Application.Exit();
-                    }
-                }
+                return;                
             }
+
+            PrepareCreateShortCut("ArtikelNrLAG");
         }
     }
 }

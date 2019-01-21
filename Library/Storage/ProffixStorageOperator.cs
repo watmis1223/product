@@ -415,12 +415,31 @@ namespace ProductCalculation.Library.Storage
                 return null;
             }
 
-            DataColumn[] oSelect = {
-                new DataColumn("LaufNr", typeof(Int32)),
-                new DataColumn("ArtikelNrLAG", typeof(string)),
-            };
+            StringBuilder query = new StringBuilder();
+            DataTable dt = new DataTable();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                ///building columns
+                query.Append("select [ArtikelNrLAG] from [LAG_Artikel] ");
+                query.Append("where ArtikelNrLAG not in ( ");
+                query.Append("select [ArtikelNrLAG] from [LAG_Dokumente] ");
+                query.AppendFormat("where ErstelltVon = '{0}'", "KalApp");
+                query.Append("group by ArtikelNrLAG");
+                query.Append(")");
 
-            DataTable dt = LoadTable("LAG_Artikel", oSelect, null, null, connectionString: connectionString);
+                connection.Open();
+                SqlDataAdapter da = new SqlDataAdapter(query.ToString(), connection);
+                dt = new DataTable();
+                da.Fill(dt);
+                connection.Close();
+            }
+
+            //DataColumn[] oSelect = {
+            //    //new DataColumn("LaufNr", typeof(Int32)),
+            //    new DataColumn("ArtikelNrLAG", typeof(string)),
+            //};
+
+            //DataTable dt = LoadTable("LAG_Artikel", oSelect, null, null, connectionString: connectionString);
 
             return dt;
         }
@@ -432,12 +451,31 @@ namespace ProductCalculation.Library.Storage
                 return null;
             }
 
-            DataColumn[] oSelect = {
-                new DataColumn("LaufNr", typeof(Int32)),
-                new DataColumn("AdressNrADR", typeof(Int32)),
-            };
+            StringBuilder query = new StringBuilder();
+            DataTable dt = new DataTable();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                ///building columns
+                query.Append("select AdressNrADR from [ADR_Adressen] ");
+                query.Append("where AdressNrADR not in ( ");
+                query.Append("select [AdressNrADR] from [dbo].[ADR_Dokumente] ");
+                query.AppendFormat("where ErstelltVon = '{0}'", "KalApp");
+                query.Append("group by [AdressNrADR]");
+                query.Append(")");
 
-            DataTable dt = LoadTable("ADR_Adressen", oSelect, null, null, connectionString: connectionString);
+                connection.Open();
+                SqlDataAdapter da = new SqlDataAdapter(query.ToString(), connection);
+                dt = new DataTable();
+                da.Fill(dt);
+                connection.Close();
+            }
+
+            //DataColumn[] oSelect = {
+            //    //new DataColumn("LaufNr", typeof(Int32)),
+            //    new DataColumn("AdressNrADR", typeof(Int32)),
+            //};
+
+            //DataTable dt = LoadTable("ADR_Adressen", oSelect, null, null, connectionString: connectionString);
 
             return dt;
         }        

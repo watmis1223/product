@@ -43,13 +43,13 @@
             this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPageGroup3 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.pnlMain = new DevExpress.XtraEditors.PanelControl();
-            this.progressBarControl1 = new DevExpress.XtraEditors.ProgressBarControl();
             this.marqueeProgressBarControl1 = new DevExpress.XtraEditors.MarqueeProgressBarControl();
+            this.progressBarControl1 = new DevExpress.XtraEditors.ProgressBarControl();
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlMain)).BeginInit();
             this.pnlMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // ribbonControl1
@@ -203,14 +203,6 @@
             this.pnlMain.Size = new System.Drawing.Size(1748, 1036);
             this.pnlMain.TabIndex = 1;
             // 
-            // progressBarControl1
-            // 
-            this.progressBarControl1.Location = new System.Drawing.Point(504, 411);
-            this.progressBarControl1.MenuManager = this.ribbonControl1;
-            this.progressBarControl1.Name = "progressBarControl1";
-            this.progressBarControl1.Size = new System.Drawing.Size(718, 64);
-            this.progressBarControl1.TabIndex = 0;
-            // 
             // marqueeProgressBarControl1
             // 
             this.marqueeProgressBarControl1.EditValue = "Loading";
@@ -219,6 +211,14 @@
             this.marqueeProgressBarControl1.Name = "marqueeProgressBarControl1";
             this.marqueeProgressBarControl1.Size = new System.Drawing.Size(718, 64);
             this.marqueeProgressBarControl1.TabIndex = 1;
+            // 
+            // progressBarControl1
+            // 
+            this.progressBarControl1.Location = new System.Drawing.Point(504, 411);
+            this.progressBarControl1.MenuManager = this.ribbonControl1;
+            this.progressBarControl1.Name = "progressBarControl1";
+            this.progressBarControl1.Size = new System.Drawing.Size(718, 64);
+            this.progressBarControl1.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -239,12 +239,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.ribbonControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pnlMain)).EndInit();
             this.pnlMain.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.marqueeProgressBarControl1.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.progressBarControl1.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
-        }                
+        }
 
         #endregion
         private DevExpress.XtraBars.Ribbon.RibbonControl ribbonControl1;
