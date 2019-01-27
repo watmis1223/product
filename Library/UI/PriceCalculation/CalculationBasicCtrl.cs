@@ -458,5 +458,30 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                 _Model.CalculationNotes[cboPriceScales.ItemIndex].Quantity = Convert.ToDecimal(txtScaleNumber.Text);
             }
         }
+
+        private void gridView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Tab)
+            {
+                GridView gridView = sender as GridView;
+                int rowHandle = gridView.FocusedRowHandle;
+                GridColumn column = gridView.FocusedColumn;
+                if (rowHandle < gridView.RowCount - 1)
+                {
+                    rowHandle++;
+                }
+                else
+                {
+                    rowHandle = 0;
+                    if (column.VisibleIndex < gridView.VisibleColumns.Count - 1)
+                        column = gridView.VisibleColumns[gridView.FocusedColumn.VisibleIndex + 1];
+                    else
+                        column = gridView.VisibleColumns[0];
+                }
+                gridView.FocusedColumn = column;
+                gridView.FocusedRowHandle = rowHandle;
+                e.Handled = true;
+            }
+        }
     }
 }
