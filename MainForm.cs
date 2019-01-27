@@ -328,11 +328,11 @@ namespace ProductCalculation
             }
         }
 
-        DataTable LoadShortCutData(string proffixConnection, string byID = "ADR_Dokumente")
+        DataTable LoadShortCutData(string proffixConnection, string byID = "AdressNrADR")
         {
             DataTable dt = new DataTable();
 
-            if (byID == "ADR_Dokumente")
+            if (byID == "AdressNrADR")
             {
                 dt = StorageOperator.LoadProffixADRAdressen(proffixConnection);
             }
