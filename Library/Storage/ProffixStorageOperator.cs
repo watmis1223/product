@@ -36,7 +36,7 @@ namespace ProductCalculation.Library.Storage
             }
 
             return iNumber;
-        }       
+        }
 
         public static ProffixLAGArtikelModel GetProffixLAGArtikelModel(string artikelNrLAG, string connectionString)
         {
@@ -159,7 +159,7 @@ namespace ProductCalculation.Library.Storage
             };
 
             DataColumn[] oCondition = new DataColumn[1];
-            DataColumn col = new DataColumn("Name", typeof(String));
+            DataColumn col = new DataColumn("SuchIndex", typeof(String));
 
             try
             {
@@ -176,7 +176,7 @@ namespace ProductCalculation.Library.Storage
 
             if (dt != null && dt.Rows.Count > 0)
             {
-                foreach(DataRow dr in dt.Rows)
+                foreach (DataRow dr in dt.Rows)
                 {
                     ProffixADRAdressenModel oModel = new ProffixADRAdressenModel()
                     {
@@ -192,7 +192,64 @@ namespace ProductCalculation.Library.Storage
                     };
 
                     model.Add(oModel);
-                }                
+                }
+            }
+
+            return model;
+        }
+
+        public static List<ProffixLAGArtikelModel> GetProffixLAGArtikelList(string name, string connectionString)
+        {
+            List<ProffixLAGArtikelModel> model = new List<ProffixLAGArtikelModel>();
+
+            if (String.IsNullOrWhiteSpace(connectionString))
+            {
+                return null;
+            }
+
+            DataColumn[] oSelect = {
+                new DataColumn("LaufNr", typeof(Int32)),
+                new DataColumn("ArtikelNrLAG", typeof(string)),
+                new DataColumn("Bezeichnung1", typeof(string)),
+                new DataColumn("SuchIndex", typeof(string)),
+                new DataColumn("SuchIndexShop", typeof(string))
+            };
+
+            DataColumn[] oCondition = new DataColumn[1];
+            DataColumn col = new DataColumn("SuchIndexShop", typeof(string));
+
+            try
+            {
+                col.DefaultValue = String.Format("%{0}%", name);
+            }
+            catch
+            {
+                col.DefaultValue = "%%";
+            }
+
+            oCondition[0] = col;
+
+            DataTable dt = LoadTable("LAG_Artikel", oSelect, oCondition, null, connectionString: connectionString);
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                foreach (DataRow dr in dt.Rows)
+                {
+                    ProffixLAGArtikelModel oModel = new ProffixLAGArtikelModel()
+                    {
+                        LaufNr = Convert.ToInt32(dr["LaufNr"]),
+                        ArtikelNrLAG = dr["ArtikelNrLAG"] != null ? dr["ArtikelNrLAG"].ToString() : "-",
+                        Bezeichnung1 = dr["Bezeichnung1"] != null ? dr["Bezeichnung1"].ToString() : "-",
+                        //Vorname = dr["Vorname"] != null ? dr["Vorname"].ToString() : "-",
+                        //Adresszeile1 = dr["Adresszeile1"] != null ? dr["Adresszeile1"].ToString() : "-",
+                        //Adresszeile2 = dr["Adresszeile2"] != null ? dr["Adresszeile2"].ToString() : "-",
+                        //LandPRO = dr["LandPRO"] != null ? dr["LandPRO"].ToString() : String.Empty,
+                        //PLZ = dr["PLZ"] != null ? dr["PLZ"].ToString() : String.Empty,
+                        //Ort = dr["Ort"] != null ? dr["Ort"].ToString() : String.Empty,
+                    };
+
+                    model.Add(oModel);
+                }
             }
 
             return model;
@@ -409,7 +466,7 @@ namespace ProductCalculation.Library.Storage
         }
 
         public static DataTable LoadProffixLAGArtikel(string connectionString)
-        {            
+        {
             if (String.IsNullOrWhiteSpace(connectionString))
             {
                 return null;
@@ -478,6 +535,6 @@ namespace ProductCalculation.Library.Storage
             //DataTable dt = LoadTable("ADR_Adressen", oSelect, null, null, connectionString: connectionString);
 
             return dt;
-        }        
+        }
     }
 }

@@ -110,6 +110,11 @@ namespace ProductCalculation
                     _PriceModule.ModuleCalculationByProffixMode(arguments);
                     break;
                 case ApplicationModules.PriceModuleCopyCalculation:
+                    PriceCalculationSetting setting = _SettingModule.GetModel();
+                    if (setting != null)
+                    {
+                        _CopyModule.ProffixConnectionString = setting.ProffixConnection;
+                    }                    
                     pnlMain.Controls.Add(_CopyModule);
                     //_PriceModule.ModuleCopyCalculationMode();
                     break;

@@ -14,6 +14,7 @@ using System.Globalization;
 using ProductCalculation.Library.Entity.Setting.PriceCalculation;
 using ProductCalculation.Library.Entity.PriceCalculation.Models;
 using System.Linq;
+using DevExpress.XtraEditors.Controls;
 
 namespace ProductCalculation.Library.UI.PriceCalculation
 {
@@ -23,6 +24,8 @@ namespace ProductCalculation.Library.UI.PriceCalculation
         public event CopyCalculationSaveChangedCallback SaveChanged;
 
         CopyCalculationModel _Model;
+        public string ProffixConnectionString { get; set; }
+
         //CalculationModel _CalculationModel;
 
         public CalculationCopyCtrl()
@@ -96,6 +99,42 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             {
                 numPriceScale.Enabled = true;
             }
+        }
+
+        private void txtNumber_ButtonClick(object sender, DevExpress.XtraEditors.Controls.ButtonPressedEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(ProffixConnectionString))
+            {
+                return;
+            }
+
+            if (e.Button.Kind == ButtonPredefines.Search)
+            {
+                if (rdoCopyTypeList.EditValue.ToString() == "A")
+                {
+                    SearchAddressDialog dlg = new SearchAddressDialog();
+                    dlg.ProffixConnectionString = ProffixConnectionString;
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        if (dlg.Model != null)
+                        {
+                            txtNumber.Text = dlg.Model.AdressNrADR.ToString();                            
+                        }
+                    }
+                }
+                else
+                {
+                    SearchArtikelDialog dlg = new SearchArtikelDialog();
+                    dlg.ProffixConnectionString = ProffixConnectionString;
+                    if (dlg.ShowDialog() == DialogResult.OK)
+                    {
+                        if (dlg.Model != null)
+                        {
+                            txtNumber.Text = dlg.Model.ArtikelNrLAG;
+                        }
+                    }
+                }
+            }            
         }
     }
 }

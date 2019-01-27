@@ -32,7 +32,6 @@
             this.labelControl1 = new DevExpress.XtraEditors.LabelControl();
             this.numPriceScale = new DevExpress.XtraEditors.SpinEdit();
             this.rdoScaleList = new DevExpress.XtraEditors.RadioGroup();
-            this.txtNumber = new DevExpress.XtraEditors.TextEdit();
             this.rdoCopyTypeList = new DevExpress.XtraEditors.RadioGroup();
             this.btnSave = new DevExpress.XtraEditors.SimpleButton();
             this.layoutControlGroup1 = new DevExpress.XtraLayout.LayoutControlGroup();
@@ -49,11 +48,11 @@
             this.emptySpaceItem3 = new DevExpress.XtraLayout.EmptySpaceItem();
             this.layoutControlItem5 = new DevExpress.XtraLayout.LayoutControlItem();
             this.emptySpaceItem5 = new DevExpress.XtraLayout.EmptySpaceItem();
+            this.txtNumber = new DevExpress.XtraEditors.ButtonEdit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControl1)).BeginInit();
             this.layoutControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPriceScale.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rdoScaleList.Properties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtNumber.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rdoCopyTypeList.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).BeginInit();
@@ -69,6 +68,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtNumber.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // layoutControl1
@@ -76,9 +76,9 @@
             this.layoutControl1.Controls.Add(this.labelControl1);
             this.layoutControl1.Controls.Add(this.numPriceScale);
             this.layoutControl1.Controls.Add(this.rdoScaleList);
-            this.layoutControl1.Controls.Add(this.txtNumber);
             this.layoutControl1.Controls.Add(this.rdoCopyTypeList);
             this.layoutControl1.Controls.Add(this.btnSave);
+            this.layoutControl1.Controls.Add(this.txtNumber);
             this.layoutControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.layoutControl1.Location = new System.Drawing.Point(0, 0);
             this.layoutControl1.Name = "layoutControl1";
@@ -139,14 +139,6 @@
             this.rdoScaleList.StyleController = this.layoutControl1;
             this.rdoScaleList.TabIndex = 21;
             this.rdoScaleList.EditValueChanged += RdoScaleList_EditValueChanged;
-            // 
-            // txtNumber
-            // 
-            this.txtNumber.Location = new System.Drawing.Point(132, 256);
-            this.txtNumber.Name = "txtNumber";
-            this.txtNumber.Size = new System.Drawing.Size(324, 40);
-            this.txtNumber.StyleController = this.layoutControl1;
-            this.txtNumber.TabIndex = 20;
             // 
             // rdoCopyTypeList
             // 
@@ -313,6 +305,17 @@
             this.emptySpaceItem5.Size = new System.Drawing.Size(1512, 42);
             this.emptySpaceItem5.TextSize = new System.Drawing.Size(0, 0);
             // 
+            // txtNumber
+            // 
+            this.txtNumber.Location = new System.Drawing.Point(132, 256);
+            this.txtNumber.Name = "txtNumber";
+            this.txtNumber.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Search)});
+            this.txtNumber.Size = new System.Drawing.Size(324, 40);
+            this.txtNumber.StyleController = this.layoutControl1;
+            this.txtNumber.TabIndex = 20;
+            this.txtNumber.ButtonClick += new DevExpress.XtraEditors.Controls.ButtonPressedEventHandler(this.txtNumber_ButtonClick);
+            // 
             // CalculationCopyCtrl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -326,7 +329,6 @@
             this.layoutControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numPriceScale.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rdoScaleList.Properties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtNumber.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rdoCopyTypeList.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlGroup1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem1)).EndInit();
@@ -342,6 +344,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.layoutControlItem5)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.emptySpaceItem5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtNumber.Properties)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -356,7 +359,6 @@
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem2;
         private DevExpress.XtraEditors.RadioGroup rdoCopyTypeList;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem1;
-        private DevExpress.XtraEditors.TextEdit txtNumber;
         private DevExpress.XtraLayout.LayoutControlGroup layoutControlGroup2;
         private DevExpress.XtraLayout.LayoutControlItem layoutControlItem2;
         private DevExpress.XtraEditors.LabelControl labelControl1;
@@ -369,5 +371,6 @@
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem4;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem3;
         private DevExpress.XtraLayout.EmptySpaceItem emptySpaceItem5;
+        private DevExpress.XtraEditors.ButtonEdit txtNumber;
     }
 }
