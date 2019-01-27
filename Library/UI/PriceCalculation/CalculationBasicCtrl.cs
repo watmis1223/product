@@ -435,6 +435,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
                 ButtonEdit ed = (ButtonEdit)gridView1.ActiveEditor;
                 if (sValue == "CHF")
                 {
+                    ed.Properties.Buttons[0].Caption = _Model.GeneralSetting.Currency.Currency;
                     _Calculation.UpdateCalculationRowCurrency(_Model, gridView1.GetDataSourceRowIndex(gridView1.FocusedRowHandle), _Model.GeneralSetting.Currency.Currency);
                 }
                 else

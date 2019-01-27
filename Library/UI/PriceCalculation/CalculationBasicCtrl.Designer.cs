@@ -199,6 +199,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph)});
             this.myRepositoryItemButtonEdit1.Name = "myRepositoryItemButtonEdit1";
             this.myRepositoryItemButtonEdit1.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
+            this.myRepositoryItemButtonEdit1.ButtonClick += MyRepositoryItemButtonEdit1_ButtonClick;
             // 
             // myRepositoryItemButtonEdit2
             // 
@@ -207,6 +208,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Glyph)});
             this.myRepositoryItemButtonEdit2.Name = "myRepositoryItemButtonEdit2";
             this.myRepositoryItemButtonEdit2.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.HideTextEditor;
+            this.myRepositoryItemButtonEdit2.ButtonClick += MyRepositoryItemButtonEdit2_ButtonClick;
             // 
             // txtScaleNumber
             // 
