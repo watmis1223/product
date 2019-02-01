@@ -163,7 +163,7 @@ namespace ProductCalculation.Library.UI.PriceCalculation
             this.repositoryItemTextEdit1.Mask.EditMask = "n4";
             this.repositoryItemTextEdit1.Mask.MaskType = DevExpress.XtraEditors.Mask.MaskType.Numeric;
             this.repositoryItemTextEdit1.Name = "repositoryItemTextEdit1";
-            this.repositoryItemTextEdit1.NullText = "0.0000";
+            this.repositoryItemTextEdit1.NullText = "0.0000";            
             // 
             // repositoryItemTextEdit2
             // 
