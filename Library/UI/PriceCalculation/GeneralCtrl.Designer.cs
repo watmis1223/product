@@ -482,6 +482,7 @@
             // 
             // txtUnitNumber
             // 
+            this.txtUnitNumber.EditValue = "1.0000";
             this.txtUnitNumber.Location = new System.Drawing.Point(175, 1009);
             this.txtUnitNumber.Name = "txtUnitNumber";
             this.txtUnitNumber.Properties.Appearance.Options.UseTextOptions = true;
